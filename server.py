@@ -174,7 +174,7 @@ def list_recipes():
 	return jsonify({'recipes': recipes})
 	
 def get_recipes(query):
-	return ['2', '4']
+	
 	
 
 ### Get products page
