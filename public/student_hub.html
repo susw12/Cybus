@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Tablezzzzz</title>
+		<link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type="text/css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	</head>
+	<body>
+		<div class="tab">
+		  <button class="tablinks" onclick="activate_announcements()">Announcements</button>
+		  <button class="tablinks" onclick="activate_recipe()">Recipe</button>
+		  <button class="tablinks" onclick="activate_ingredients()">Ingredients</button>
+		</div>
+		
+		<div id="content"></div>
+	</body>
+	<script> 
+		var announcements, recipes;
+		
+		$(() => {
+			$.ajax({
+				method: 'GET',
+				url: '/list_announcements',
+				success: data => {
+					announcements = data['announcements'];
+					activate_announcements();
+				}
+			});
+		});
+		
+		function activate_announcements() {
+			let el = document.getElementById('content'), html = '<br><table>';
+			
+			html += '<tr><th class="announce">Announcements</th></tr>'
+			
+			for (let an of announcements) {
+				html += `<tr><td class="announce">${an[1]}</td><td class="announce">${an[2]}</td></tr>`;
+			}
+			
+			html += "</table>";
+			el.innerHTML = html;
+		}
+		
+		function activate_recipe() {
+			let el = document.getElementById('content'), html = '';
+			
+			html += '<div class="search"><input id="q_recipe">';
+			html += '<button onclick="get_recipes()">Submit</button></div>';
+			html += '<div id="res"></div>';
+			
+			el.innerHTML = html;
+		}
+		
+		function get_recipes() {
+			let param = document.getElementById('q_recipe').value;
+			$.ajax({
+				method: 'GET',
+				url: '/list_recipes',
+				data: {'query': param},
+				success: data => {
+					recipes = data['recipes'];
+					put_recipes();
+				}
+			});
+		}
+		
+		function put_recipes() {
+			let el = document.getElementById('res'), html = '<br><table>';
+			
+			html += '<tr><th class="recipes">Recipes</th></tr>'
+			
+			for (let re of recipes) {
+				html += `<tr><td class="recipes">${re}</td></tr>`;
+			}
+			
+			html += "</table>";
+			el.innerHTML = html;
+		}
+	</script>
+</html>                                		                            

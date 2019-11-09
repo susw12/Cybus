@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Tablezzzzz</title>
+		<link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type="text/css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	</head>
+	<body>
+		Enter your username: <br>
+		<input id="uname"> <br>
+		Enter your password: <br>
+		<input id="pword"> <br>
+	</body>
+	<script> 		
+		arg_list = ['uname', 'pword'];
+		const enter_key = 13;
+		
+		$(() => {
+			document.onkeydown = function(event) {
+				if (event.which == enter_key) {
+					json = {};
+					for (let arg of arg_list) {
+						json[arg] = document.getElementById(arg).value;
+					}
+					console.log(json);
+					$.ajax({
+						method: 'POST',
+						url: '/login_company',
+						data: json,
+						success: data => {
+							if (data === 'ok') {
+								window.location.href = '/student_hub';
+							} else {
+								console.log(data);
+							}
+						}
+					});
+				}
+			}
+		});
+	</script>
+</html>                                		                            

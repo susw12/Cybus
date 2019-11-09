@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Tablezzzzz</title>
+		<link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type="text/css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	</head>
+	<body>
+		<a href="/"> 
+			<button> View all courses </button>
+		</a>
+		<br>		
+		<button onclick="prompt_text()">Create new text module</button>
+		<button onclick="prompt_video()">Create new video module</button>
+		
+		<div id="prompt_dump"></div>
+		<div id="table_dump"></div>
+	</body>
+	<script> 
+		var ids, def_html;
+		
+		$(() => {
+			def_html = document.body.innerHTML;
+			$.ajax({
+				url: '/list_modules',
+				method: 'GET',
+				data: {'id': course_id()},
+				success: data => {
+					load_items(data['data']);
+				}
+			});
+		});
+		
+		function course_id() {
+			url = document.URL;
+			list = url.split('/');
+			return list[list.length - 1];
+		}
+		
+		function load_items(data) {
+			ids = [];
+			let targ = document.getElementById("table_dump");
+			for (let ind = 0; ind < data.length; ind++) {
+				let x = data[ind];
+				ids.push(x[0]);
+				button_html = ` <button onclick="delete_module(${ind})">Delete</button>`;
+				html = `<table id=${ind}>`;
+				html += "<tr> <th>" + x[1] + button_html + "</th> </tr>";
+				/* do something with x[2], the type */
+				html += "<tr> <td>" + x[3] + "</td> </tr>";
+				html += "</table> <br>";
+				targ.innerHTML = targ.innerHTML + html;
+			}
+		}
+		
+		function prompt_text() {
+			html = `Enter the module name: <br>`;
+			html += `<input id="name"></input> <br>`;
+			html += `Enter the content of the text: <br>`;
+			html += `<textarea id="content"></textarea> <br>`;
+			html += `<button onclick="submit_module(0)">Create!</button> <br>`;
+			let targ = document.getElementById("prompt_dump");
+			targ.innerHTML = html;
+		}
+		
+		function prompt_video() {
+			html = `Enter the module name: <br>`;
+			html += `<input id="name"></input> <br>`;
+			html += `Enter the video link: <br>`;
+			html += `<input id="content"></input> <br>`;
+			html += `<button onclick="submit_module(1)">Create!</button> <br>`;
+			let targ = document.getElementById("prompt_dump");
+			targ.innerHTML = html;
+		}
+		
+		function submit_module(type) {
+			let name = document.getElementById("name").value, content = document.getElementById("content").value;
+			new_module(name, type, content);
+		}
+		
+		function new_module(name, type, content) {
+			$.ajax({
+				url: '/create_module',
+				method: 'POST',
+				data: {
+					'id': course_id(),
+					'name': name,
+					'type': type,
+					'content': content
+				},
+				success: () => {
+					window.location.reload(0);
+				}
+			});
+		}
+		
+		function delete_module(num) {
+			$.ajax({
+				url: '/delete_module',
+				method: 'POST',
+				data: {
+					'course_id': course_id(),
+					'module_id': ids[num]
+				},
+				success: () => {
+					window.location.reload(0);
+				}
+			})
+		}
+	</script>
+</html>                                		                            

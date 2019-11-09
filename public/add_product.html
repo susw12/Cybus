@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Tablezzzzz</title>
+		<link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type="text/css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	</head>
+	<body>
+		<form method="post" action="/add_product">
+			Enter item name: <br>
+			<input name="name"></input><br>
+			Enter price: <br>
+			<input name="price"></input><br>
+			Enter description: <br>
+			<input name="desc"></input><br>
+			Enter tag: <br>
+			<input type="text" name="tag" list="tag_list" id="tag_input">
+				<datalist id="tag_list">
+				  
+				</datalist>
+			<br>
+			
+			<button type="submit">Submit</button>
+		</form>
+	</body>
+	<script> 
+		var tags = -1;
+		$.ajax({
+			method: 'GET',
+			url: '/product_tags',
+			success: data => {
+				tags = data['tags'];
+				set_tags(tags);
+			}
+		});
+		
+		function set_tags(taglist) {
+			let el = document.getElementById('tag_list'), html = '';
+			
+			for (let tag of taglist) {
+				push = `<option value='${tag}'>`;
+				html += push;
+			}
+			
+			el.innerHTML = html;
+			console.log(el.innerHTML);
+		}
+	</script>
+</html>                                		                            
