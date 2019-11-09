@@ -1,10 +1,11 @@
-import sqlite3
-import random
-import time
+import sqlite3, requests, time, random
 
 conn = sqlite3.connect('teenhacks.db', check_same_thread = False)
 
 c = conn.cursor()
+
+APP_KEY = "34d4f83429cfe1e57b09c59ad3f4c886"
+APP_ID = "22e4f2a8"
 
 def setup():
     #product table
@@ -40,7 +41,7 @@ def setup():
 def genID(l=[]):
     while True:
         s = ''
-        for i in range(50):
+        for i in range(7):
             t = random.randint(0,2)
             if (t == 0):
                 s += chr(ord('0') + random.randint(0, 9))
@@ -52,8 +53,15 @@ def genID(l=[]):
             l.append(s)
             return s
 
-def getlink(name):
-    return "link not found"
+def get_link(name):
+    name = name.strip().replace(' ', "%20")
+    link = 'https://api.edamam.com/api/food-database/parser?nutrition-type=logging&ingr={}&app_id={}&app_key={}'.format(name, APP_ID, APP_KEY)
+    return link
+
+def get_nutrients(link):
+    response = requests.get(link)
+    r = response.json()
+    return r['hints'][0]['food']['nutrients']
 
 def company_login(uname, pswd):
     v = c.execute('''SELECT * FROM companies WHERE uname='{}' AND psw='{}' '''.format(uname, pswd))
@@ -68,11 +76,26 @@ def add_student(name, uname, psw, uni, zc, county, state, gid = ""):
     c.execute('''INSERT INTO students values('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')'''.format(genID(), name, uname, psw, uni, zc, county, state, gid))
     conn.commit()
 
+def get_company(cid):
+    info = c.execute('''SELECT * FROM companies WHERE cid = '{}' '''.format(cid))
+    return list(info.fetchall()[0])
+
+def get_student(sid):
+    info = c.execute('''SELECT * FROM students WHERE sid = '{}' '''.format(sid))
+    return list(info.fetchall()[0])
+
 def create_group(name):
     gid = genID()
     c.execute('''INSERT INTO master_groups values('{}', '{}')'''.format(gid, name))
     c.execute('''CREATE TABLE '{}' (id text, timestamp text, content text)'''.format(gid))
     conn.commit()
+
+def get_groups():
+    groups = c.execute('''SELECT * FROM master_groups''')
+    groups_list = []
+    for row in groups:
+        groups_list.append(list(row))
+    return groups_list
 
 def create_announcement(gid, content):
     timestamp = time.strftime("%a, %d %b %Y %I:%M", time.localtime())
@@ -87,7 +110,6 @@ def get_announcement(gid):
 
     return announcements
     
-
 #zc is zipcode
 def add_company(name, uname, psw, phone, email, zc, county, state):
     c.execute('''INSERT INTO companies values('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')'''.format(genID(), name, uname, psw, phone, email, zc, county, state))
@@ -99,7 +121,7 @@ def add_product(price, name, tag, desc, cid):
         #print(row)
         info = row
     zc, county = info[6], info[7]
-    c.execute('''INSERT INTO products values('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')'''.format(genID(), price, name, tag, desc, cid, getlink(name), zc, county));
+    c.execute('''INSERT INTO products values('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')'''.format(genID(), price, name, tag, desc, cid, get_link(name), zc, county));
     conn.commit()
 
 def get_tags(keyword):
@@ -139,5 +161,6 @@ def close():
 
 if __name__ == '__main__':
     setup()
-    print(verify_student_login("a", "a"))
+    #--Tests--
+    print(get_groups())
     close()
