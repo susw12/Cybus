@@ -4,6 +4,7 @@
  Cibus
  <br>
 </h1>
+
 ## Inspiration
 The eating habits of college students is a very well documented issue. Over the summer I was taking a course at Harvard University, and as a part of the program, we had to find our lunches daily. There were several college students in my class, and after discussing their normal dietary habits with them, I realized that many college students defaulted to fast-food restaurants, due to their convenience, in time, cost, and proximity. 
 
