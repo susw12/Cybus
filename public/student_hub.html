@@ -235,7 +235,7 @@
 				html += `<tr><div class="announce" style="font-size:12px">${an[1]}</div>${an[2]}</tr>`;
 			}
 			
-			html += "</table>";
+			html += "</table><br>";
 
 			html += "<input id='announced' placeholder='Create new announcement' style='width: 250px'><button onclick='create()'>Send</button>";
 			el.innerHTML = html;
@@ -387,7 +387,7 @@
 		}
 
 		function put_tags() {
-			let el = document.getElementById('res'), html = '';
+			let el = document.getElementById('res'), html = '<b>Tags:</b><br>';
 			for (let tag of tags) {
 				html += `<div onclick='query_tag("${tag}")'>${tag}</div>`;
 			}
