@@ -9,38 +9,41 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	</head>
 	<body>
-		Enter/change your username: <br>
+		Enter a username: <br>
 		<input id="uname"> <br>
-		Enter/change your password: <br>
+		Enter a password: <br>
 		<input id="pword"> <br>
-		Enter/change  your name: <br>
+		Enter your name: <br>
 		<input id="name"> <br>
-		Enter/change  your university: <br>
-		<input id="university"> <br>
-		Enter/change  your county: <br>
+		Enter your phone number: <br>
+		<input id="phone"> <br>
+		Enter your email: <br>
+		<input id="email"> <br>
+		Enter your county: <br>
 		<input id="county"> <br>
-		Enter/change  your zip code: <br>
+		Enter your zip code: <br>
 		<input id="zip"> <br>
-		Enter/change  your state: <br>
+		Enter your state: <br>
 		<input id="state"> <br>
 	</body>
 	<script> 		
-		arg_list = ['uname', 'pword', 'name', 'university', 'county', 'zip', 'state'];
+		arg_list = ['uname', 'pword', 'name', 'phone', 'email', 'county', 'zip', 'state'];
 		const enter_key = 13;
 		
 		$(() => {
 			$.ajax({
 				method: 'GET',
-				url: '/get_student_info',
+				url: '/get_company_info',
 				success: data => {
-					data = data['student'];
+					data = data['company'];
 					document.getElementById('uname').value = data[2];
 					document.getElementById('pword').value = data[3];
 					document.getElementById('name').value = data[1];
-					document.getElementById('university').value = data[4];
-					document.getElementById('county').value = data[6];
-					document.getElementById('zip').value = data[5];
-					document.getElementById('state').value = data[7];
+					document.getElementById('phone').value = data[4];
+					document.getElementById('email').value = data[5];
+					document.getElementById('county').value = data[7];
+					document.getElementById('zip').value = data[6];
+					document.getElementById('state').value = data[8];
 				}
 			});
 
@@ -53,7 +56,7 @@
 					console.log(json);
 					$.ajax({
 						method: 'POST',
-						url: '/update_student',
+						url: '/update_company',
 						data: json,
 						success: data => {
 							if (data === 'ok') {

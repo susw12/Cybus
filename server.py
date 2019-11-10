@@ -170,12 +170,50 @@ def get_student_info():
 def update_student():
 	if (request.method == 'GET'):
 		return render_template('update_student.html')
-	
+	else:
+		id = request.cookies.get('id')
+		uname = request.form['uname']
+		pword = request.form['pword']
+		name = request.form['name']
+		university = request.form['university']
+		county = request.form['county']
+		zip = request.form['zip']
+		state = request.form['state']
 
+		db.change_student(id, name, uname, pword, university, zip, county, state)
+		print('update student', name, uname, pword, university, zip, county, state)
+		
+		return 'ok'
+
+@app.route('/get_company_info', methods=['GET'])
+def get_company_info():
+	id = request.cookies.get('id')
+	company = db.get_company(id)
+	return jsonify({'company': company})
+
+@app.route('/update_company', methods=['GET', 'POST'])
+def update_company():
+	if (request.method == 'GET'):
+		return render_template('update_company.html')
+	else:
+		id = request.cookies.get('id')
+		uname = request.form['uname']
+		pword = request.form['pword']
+		name = request.form['name']
+		phone = request.form['phone']
+		email = request.form['email']
+		county = request.form['county']
+		zip = request.form['zip']
+		state = request.form['state']
+		
+		db.change_company(id, name, uname, pword, phone, email, zip, county, state)
+		print('change company', name, uname, pword, phone, email, zip, county, state)
+
+		return 'ok'
 
 ### Student hub await sujay
 
-# Send HTML await login
+# Send HTML done
 @app.route('/student_hub')
 def student_hub():
 	res = make_response(render_template('student_hub.html'))
@@ -277,4 +315,3 @@ def invalid_company():
 		
 if __name__ == "__main__":
 	app.run(host = 'localhost', port = 4054)
-
