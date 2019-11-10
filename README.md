@@ -1,1 +1,7 @@
-# teenhacksli
+# Cibus
+
+## Inspiration
+The eating habits of college students is a very well documented issue. Over the summer I was taking a course at Harvard Univeristy, and as a part of the program, we had to find our lunches on a daily basis. There were several college students in my class, and after discussing their normal dietary habits with them, I realized that many college students deafaulted to fast-food restraunts, due to their convenience, in time, cost, and proximity. Intrested in this issue, I conducted futher research. According to a study conducted by researchers at Vrije Universiteit Brussel and Ghent University in Brussels, Belgium, college students dietary habits are heavily affected by their personal preference, their peer groups, their physical evironment, and the media that they consume. [1](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3905922/) Another study conducted by researchers at University of Parma in Parma, Italy, Cornell Univeristy in Ithaca, New York, and EGADE Business School in San Pedro Garza García, Mexico, found that students would prefer low-cost, unhealthy options due to their taste and convience. Additionally, they found that many students actively avoided preparing their own meals, due to cost and time constraints. However, those students who were able to cook their own food were noticebly healthier. [2](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6315356/) We wanted to make an application that would enable every student, regardless of how busy they were, their dietary restrictions, or their socio-economic status, be able to have healthy, homecooked meals that would promote healthy eating habits for a low cost.
+
+## What it does
+Our application and mobile app 
