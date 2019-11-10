@@ -595,33 +595,33 @@
 
 			if (ingredients.length > 0) {
 				html += `<div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" margin="0px" padding="0px">
-                <thead>
-                  <tr>
-                    <th>Item Name</th>
-                    <th>Price</th>
-                    <th>Offered by</th>
-                    <th>Description</th>
-                  </tr>
-                </thead>
-                <tfoot>
-                  <tr>
-					<th>Item Name</th>
-                    <th>Price</th>
-                    <th>Offered by</th>
-                    <th>Description</th>
-                  </tr>
-                </tfoot>`;
-			html += '<tbody>';
-			for (let ingredient of ingredients) {
-				html += `<tr><td>${ingredient[2]}</td><td>${ingredient[1]}</td>
-				<td>${ingredient[9]}</td><td>${ingredient[4]}</td></tr>`;
-			}
-			html += '</tbody>'
+				<div class="table-responsive">
+				<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" margin="0px" padding="0px">
+					<thead>
+					<tr>
+						<th>Item Name</th>
+						<th>Price</th>
+						<th>Offered by</th>
+						<th>Description</th>
+					</tr>
+					</thead>
+					<tfoot>
+					<tr>
+						<th>Item Name</th>
+						<th>Price</th>
+						<th>Offered by</th>
+						<th>Description</th>
+					</tr>
+					</tfoot>`;
+				html += '<tbody>';
+				for (let ingredient of ingredients) {
+					html += `<tr><td>${ingredient[2]}</td><td>${ingredient[1]}</td>
+					<td>${ingredient[9]}</td><td>${ingredient[4]}</td></tr>`;
+				}
+				html += '</tbody>'
 
-			html += '</div>';
-			el.innerHTML = html;
+				html += '</div>';
+				el.innerHTML = html;
 			} else {
 				html = "<center>No results found in the same region.</center>";
 				el.innerHTML = html;

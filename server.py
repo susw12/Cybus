@@ -48,6 +48,13 @@ def product_tags():
 	tags = db.get_tags('')
 	return jsonify({'tags': tags})
 
+@app.route('/list_products', methods=['GET'])
+def list_products():
+	id = request.cookies.get('id')
+	products = db.get_company_products(id)
+
+	return jsonify({'products': products})
+
 ### Register/login done
 
 @app.route('/register_student', methods=['GET', 'POST'])
