@@ -26,3 +26,14 @@ Our app is built using a Flask webserver to handle our backend interactions, lik
 
 ## Challenges we ran into
 Throughout the event, we ran into several issues. Our first issue was with finding an API that would allow us to access nutrition information for general produce and an API that would allow us to access recipes based on filters. While researching this project, we discovered that many of the APIs that had this fuctionality had either been unsupported or required you to pay. Another issue that we ran into was the formating for our UI. Since we had many dynamic aspects of our website, we ran into issues with formatting our website with our CSS. We also had an issue early on with GitHub, where we were unable to access any of our files.
+
+## Accomplishments that we are proud of
+Our biggest accomplishment was being able to have a working product early on. This allowed us to improve on our project, adding features and increasing the usability of the application as a whole. We also planned well, which helped us efficiently approach our project.
+
+## What we learned
+We learned that adequate planning makes a huge difference and when the plan falls apart as it did with frontend, we fall apart as we struggle to be able to work efficiently and stick to our schedule. We also learned that we should not bite off more than we can chew, even if we think we can do it.
+
+## What's next for Cibus
+Our plan for Cibus is to move the website over to a more stable and production-friendly platform like Django or Node.js and to add security features to our data storage. We would also like to improve the UI to make it more user-friendly.
+
+We are looking at possible ways to monetize our product and are interested in working with an investor to grow our product. We believe that this is a real issue that many college students face daily and there is a real market out there for this product.
