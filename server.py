@@ -269,6 +269,8 @@ def join_group():
 	id = request.cookies.get('id')
 	gid = request.form['id']
 
+
+
 	db.set_group(id, gid)
 
 	return 'ok'
@@ -366,7 +368,7 @@ def logout():
 
 @app.route('/')
 def root():
-	return render_template('home.html')
+	return render_template('index.html')
 
 ### Run
 		

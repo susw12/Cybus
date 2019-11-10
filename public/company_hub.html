@@ -44,11 +44,11 @@
 		<div id="wrapper">
 			<!-- Sidebar -->
 			<ul class="sidebar navbar-nav">
-				<li class="nav-item">
+				<!-- <li class="nav-item">
 					<a id="ap" class="nav-link" onclick="activate_profile()">
 						<span>Profile</span>
 					</a>
-				</li>
+				</li> -->
 				<li class="nav-item">
 					<a id="at" class="nav-link" onclick="activate_tags()">
 						<span>Add products</span>
@@ -86,7 +86,7 @@
 		
 		$(() => {
 			get_tags();
-			activate_profile();
+			// activate_profile();
 			$.ajax({
 				method: 'GET',
 				url: '/get_company_info',
@@ -97,14 +97,14 @@
 		});
 
 		function reselect(id) {
-			if (id == '#ap') {
-				if (!$('#ap').hasClass('active')) 
-					$('#ap').addClass('active');
-			}
-			else {
-				if ($('#ap').hasClass('active')) 
-					$('#ap').removeClass('active');
-			}
+			// if (id == '#ap') {
+			// 	if (!$('#ap').hasClass('active')) 
+			// 		$('#ap').addClass('active');
+			// }
+			// else {
+			// 	if ($('#ap').hasClass('active')) 
+			// 		$('#ap').removeClass('active');
+			// }
 
 			if (id == '#at') {
 				if (!$('#at').hasClass('active')) 
@@ -116,32 +116,32 @@
 			}
 		}
 
-		function activate_profile() {
-			reselect('#ap');
-			$.ajax({
-				method: 'GET',
-				url: '/get_company_info',
-				success: data => {
-					data = data['company'];
-					let html = "";
-					html += create_element('uname', data[2]);
-					html += create_element('pword', data[3]);
-					html += create_element('name', data[1]);
-					html += create_element('phone', data[4]);
-					html += create_element('email', data[5]);
-					html += create_element('county', data[7]);
-					html += create_element('zip', data[6]);
-					html += create_element('state', data[8]);
-					document.getElementById('content').innerHTML = html;
-				}
-			});
-		}
+		// function activate_profile() {
+		// 	reselect('#ap');
+		// 	$.ajax({
+		// 		method: 'GET',
+		// 		url: '/get_company_info',
+		// 		success: data => {
+		// 			data = data['company'];
+		// 			let html = "";
+		// 			html += create_element('uname', data[2]);
+		// 			html += create_element('pword', data[3]);
+		// 			html += create_element('name', data[1]);
+		// 			html += create_element('phone', data[4]);
+		// 			html += create_element('email', data[5]);
+		// 			html += create_element('county', data[7]);
+		// 			html += create_element('zip', data[6]);
+		// 			html += create_element('state', data[8]);
+		// 			document.getElementById('content').innerHTML = html;
+		// 		}
+		// 	});
+		// }
 
-		function create_element(elname, val) {
-			html = '';
-			html += elname + ": " + val + "<br>";
-			return html;
-		}
+		// function create_element(elname, val) {
+		// 	html = '';
+		// 	html += elname + ": " + val + "<br>";
+		// 	return html;
+		// }
 
 		function get_tags() {
 			$.ajax({
