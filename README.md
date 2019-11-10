@@ -23,3 +23,6 @@ The company page contains an information tab that allows local stores to provide
 
 ## How we built it
 Our app is built using a Flask webserver to handle our backend interactions, like webpage management, data handling, and GET and POST functions. We are using an SQLite3 database to manage our data, including announcements, store listings, etc. We are using Edamam's Recipe Search API and Food Database API for our recipes and nutritional value for the ingredients, respectively. We used Bootstrap's CSS and JS library, combined with several Bootstrap templates for our frontend. Our website is hosted on a Google Cloud Console instance running Ubuntu 18.04 LTS server.
+
+## Challenges we ran into
+Throughout the event, we ran into several issues. Our first issue was with finding an API that would allow us to access nutrition information for general produce and an API that would allow us to access recipes based on filters. While researching this project, we discovered that many of the APIs that had this fuctionality had either been unsupported or required you to pay. Another issue that we ran into was the formating for our UI. Since we had many dynamic aspects of our website, we ran into issues with formatting our website with our CSS. We also had an issue early on with GitHub, where we were unable to access any of our files.
