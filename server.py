@@ -269,11 +269,13 @@ def join_group():
 	id = request.cookies.get('id')
 	gid = request.form['id']
 
+	ok = db.in_group(gid)
 
-
-	db.set_group(id, gid)
-
-	return 'ok'
+	if (ok):
+		db.set_group(id, gid)
+		return 'ok'
+	else:
+		return 'nonexistant'
 
 # Get announcements done
 @app.route('/list_announcements', methods=['GET'])
@@ -345,6 +347,7 @@ def get_ingredients():
 	ingredients = db.get_products(qtag, id)
 	for i in range(len(ingredients)):
 		ingredients[i].append(db.get_company(ingredients[i][5])[1])
+	print(ingredients)
 	return jsonify({'ingredients': ingredients})
 
 ### Invalid pages

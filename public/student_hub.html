@@ -155,7 +155,6 @@
 			// 	if ($('#ap').hasClass('active')) 
 			// 		$('#ap').removeClass('active');
 			// }
-			console.log(id);
 
 			if (id == '#aa') {
 				if (!$('#aa').hasClass('active')) 
@@ -258,8 +257,12 @@
 				url: '/join_group',
 				data: {'id': id},
 				success: data => {
-					gid = id;
-					get_announcements(1)
+					if (data == 'ok') {
+						gid = id;
+						get_announcements(1);
+					} else {
+						console.log('Group does not exist!');
+					}
 				}
 			});
 		}
@@ -290,7 +293,7 @@
 			html += "</table><br>";
 
 			html += `<input id='announced' placeholder='Create new announcement' style='width: 250px
-			; border-top-left-radius: 10px; border-bottom-left-radius: 10px'><button onclick='create()' style='btn btn-primary border-top-right-radius: 10px; border-bottom-right-radius: 10px'>Send</button>`;
+			; border-top-left-radius: 10px; border-bottom-left-radius: 10px'><button onclick='create()' style='border-top-right-radius: 10px; border-bottom-right-radius: 10px'>Send</button>`;
 			el.innerHTML = html;
 
 			document.getElementById('announced').onkeypress = event => {
@@ -439,7 +442,7 @@
 			// html += '<div id="health">Health tags (such as gluten-free): <br></div>';
 			// html += '<button onclick="add_dropdown()">Add new tag</button>'
 			html += '<input id="q_recipe" style="width:90% !important; border-top-left-radius: 10px; border-bottom-left-radius: 10px">';
-			html += '<button onclick="get_recipes()" style="btn btn-primary width:10% !important; border-top-right-radius: 10px; border-bottom-right-radius: 10px">Submit</button></div>';
+			html += '<button onclick="get_recipes()" style="width:10% !important; border-top-right-radius: 10px; border-bottom-right-radius: 10px">Submit</button></div>';
 			html += get_dropdown();
 			html += '<div id="res"></div>';
 			
@@ -525,7 +528,7 @@
 			html += `<div class="search" style="width: 100%; margin: 0px !important; border: 0px !important; 
 			padding: 0px !important;">`;
 			html += '<input id="q_ingredient" style="width: 90%; border-top-left-radius: 10px; border-bottom-left-radius: 10px">';
-			html += `<button onclick="get_ingredient_tags()" style="btn btn-primary width: 10%
+			html += `<button onclick="get_ingredient_tags()" style="width: 10%
 			; border-top-right-radius: 10px; border-bottom-right-radius: 10px">Submit</button></div>`;
 			html += '<div id="res"></div>';
 			
@@ -607,6 +610,9 @@
 
 			html += '</div>';
 			el.innerHTML = html;
+			} else {
+				html = "<center>No results found in the same region.</center>";
+				el.innerHTML = html;
 			}
 			
 		}

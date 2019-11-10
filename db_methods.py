@@ -147,6 +147,13 @@ def set_group(sid, gid):
     c.execute('''UPDATE students SET gid = '{}' WHERE sid = '{}' '''.format(gid, sid))
     conn.commit()
 
+def in_group(gid):
+    groups = get_groups()
+    for g in groups:
+        if gid == g[0]:
+            return True
+    return False
+
 def create_announcement(gid, content):
     timestamp = time.strftime("%a, %d %b %Y %I:%M", time.localtime())
     c.execute('''INSERT INTO '{}' values('{}', '{}', '{}')'''.format(gid, genID(), timestamp, content))
@@ -166,13 +173,21 @@ def add_company(name, uname, psw, phone, email, zc, county, state):
     conn.commit()
 
 def add_product(price, name, tag, desc, cid):
-    company_info = c.execute('''SELECT * FROM companies WHERE cid="{}"'''.format(cid));
+    company_info = c.execute('''SELECT * FROM companies WHERE cid="{}"'''.format(cid))
     for row in company_info:
         #print(row)
         info = row
     zc, county = info[6], info[7]
     c.execute('''INSERT INTO products values('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')'''.format(genID(), price, name, tag, desc, cid, get_link(name), zc, county));
     conn.commit()
+
+def get_company_products(cid):
+    produce = c.execute('''SELECT * FROM products WHERE cid = "{}"'''.format(cid))
+    products = []
+    for row in produce:
+        products.append(list(row))
+
+    return products
 
 def get_tags(keyword):
     tags = []
@@ -213,4 +228,5 @@ if __name__ == '__main__':
     setup()
     #set_group('G5v63r8', '0N3iYU2')
     #change_company('Ul86qZ8DlOar1Pu758ZQc1meUAfALm943I8p575LBWjL8ZCbK8', 'colin galen', 'galen_colin', '', '', 'tjhsst', '20479', 'Fairfax', 'VA')
+    #print(get_company_products('GFE6440'))
     close()
