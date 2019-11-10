@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Tablezzzzz</title>
+		<link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type="text/css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	</head>
+	<body>
+		Enter/change your username: <br>
+		<input id="uname"> <br>
+		Enter/change your password: <br>
+		<input id="pword"> <br>
+		Enter/change  your name: <br>
+		<input id="name"> <br>
+		Enter/change  your university: <br>
+		<input id="university"> <br>
+		Enter/change  your county: <br>
+		<input id="county"> <br>
+		Enter/change  your zip code: <br>
+		<input id="zip"> <br>
+		Enter/change  your state: <br>
+		<input id="state"> <br>
+	</body>
+	<script> 		
+		arg_list = ['uname', 'pword', 'name', 'university', 'county', 'zip', 'state'];
+		const enter_key = 13;
+		
+		$(() => {
+			$.ajax({
+				method: 'GET',
+				url: '/get_student_info',
+				success: data => {
+					data = data['student'];
+					console.log(data);
+				}
+			});
+
+			document.onkeydown = function(event) {
+				if (event.which == enter_key) {
+					json = {};
+					for (let arg of arg_list) {
+						json[arg] = document.getElementById(arg).value;
+					}
+					console.log(json);
+					$.ajax({
+						method: 'POST',
+						url: '/register_student',
+						data: json,
+						success: data => {
+							if (data === 'ok') {
+								window.location.href = '/student_hub';
+							} else {
+								console.log(data);
+							}
+						}
+					});
+				}
+			}
+		});
+	</script>
+</html>                                		                            

@@ -18,9 +18,65 @@
 		<div id="content"></div>
 	</body>
 	<script> 
-		var announcements, recipes;
+		var announcements, recipes, gid;
 		
-		$(() => {
+		$(get_group);
+
+		function get_group() {
+			$.ajax({
+				method: 'GET',
+				url: '/student_group',
+				success: data => {
+					if (data == '') {
+						activate_group();
+					} else {
+						gid = data;
+						get_announcements();
+					}
+				}
+			});
+		}
+
+		function activate_group() {
+			let el = document.getElementById('content'), html = '<br>';
+			
+			html += 'Create group: <br> <input id="groupname"></input> <br>';
+			html += '<button onclick="create_group()">Create group</button> <br>';
+
+			html += 'Join group (enter group id): <br> <input id="joinid"></input> <br>';
+			html += '<button onclick="join_group()">Join group</button> <br>';
+			
+			el.innerHTML = html;
+		}
+
+		function create_group() {
+			let name = document.getElementById('groupname').value;
+
+			$.ajax({
+				method: 'POST',
+				url: '/create_group',
+				data: {'name': name},
+				success: data => {
+					get_group()
+				}
+			});
+		}
+
+		function join_group() {
+			let id = document.getElementById('joinid').value;
+
+			$.ajax({
+				method: 'POST',
+				url: '/join_group',
+				data: {'id': id},
+				success: data => {
+					gid = id;
+					get_announcements()
+				}
+			});
+		}
+
+		function get_announcements() {
 			$.ajax({
 				method: 'GET',
 				url: '/list_announcements',
@@ -29,10 +85,12 @@
 					activate_announcements();
 				}
 			});
-		});
+		}
 		
 		function activate_announcements() {
-			let el = document.getElementById('content'), html = '<br><table>';
+			let el = document.getElementById('content'), html = 'Your group ID: ' + gid + '<br>';
+			
+			html += '<br><table>';
 			
 			html += '<tr><th class="announce">Announcements</th></tr>'
 			
@@ -40,8 +98,22 @@
 				html += `<tr><td class="announce">${an[1]}</td><td class="announce">${an[2]}</td></tr>`;
 			}
 			
-			html += "</table>";
+			html += "</table><br>";
+
+			html += "Create new announcement:<br><input id='announced'><br><button onclick='create()'>Send</button>";
 			el.innerHTML = html;
+		}
+
+		function create() {
+			let con = document.getElementById('announced').value;
+			$.ajax({
+				method: 'POST',
+				url: '/put_announcement',
+				data: {'content': con},
+				success: data => {
+					get_announcements()
+				}
+			});
 		}
 		
 		function activate_recipe() {

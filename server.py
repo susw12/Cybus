@@ -160,6 +160,19 @@ def login_company():
 			print('login company', uname, pword)
 			return res
 
+@app.route('/get_student_info', methods=['GET'])
+def get_student_info():
+	id = request.cookies.get('id')
+	student = db.get_student(id)
+	return jsonify({'student': student})
+
+@app.route('/update_student', methods=['GET', 'POST'])
+def update_student():
+	if (request.method == 'GET'):
+		return render_template('update_student.html')
+	
+
+
 ### Student hub await sujay
 
 # Send HTML await login
@@ -172,6 +185,32 @@ def student_hub():
 		return redirect('/invalid_student')
 	return res
 
+@app.route('/student_group', methods=['GET'])
+def student_group():
+	id = request.cookies.get('id')
+	student = db.get_student(id)
+	gid = student[-1]
+	return gid
+
+@app.route('/create_group', methods=['POST'])
+def create_group():
+	id = request.cookies.get('id')
+	name = request.form['name']
+	gid = db.create_group(name)
+
+	db.set_group(id, gid)
+
+	return 'ok'
+
+@app.route('/join_group', methods=['POST'])
+def join_group():
+	id = request.cookies.get('id')
+	gid = request.form['id']
+
+	db.set_group(id, gid)
+
+	return 'ok'
+
 # Get announcements await aaron
 @app.route('/list_announcements', methods=['GET'])
 def list_announcements():
@@ -180,13 +219,23 @@ def list_announcements():
 		return redirect('/invalid_student')
 	
 	id = request.cookies.get('id')
+	student = db.get_student(id)
+	gid = student[-1]
 	
-	list = get_announcements(id)
+	list = db.get_announcement(gid)
 	
 	return jsonify({'announcements': list})
-	
-def get_announcements(id):
-	return [['a', 'b', 'c'], ['d', 'e', 'f']]
+
+@app.route('/put_announcement', methods=['POST'])
+def put_announcement():
+	id = request.cookies.get('id')
+	student = db.get_student(id)
+	gid = student[-1]
+	content = request.form['content']
+
+	db.create_announcement(gid, content)
+
+	return 'ok'
 	
 @app.route('/list_recipes', methods=['GET'])
 def list_recipes():
@@ -197,11 +246,11 @@ def list_recipes():
 	recipes = get_recipes(query)
 	
 	return jsonify({'recipes': recipes})
+
+# 
 	
 # def get_recipes(query):
 	
-	
-
 ### Get products page
 
 # @app.route('/product_list', methods=['GET'])
@@ -224,11 +273,6 @@ def invalid_student():
 def invalid_company():
 	return 'Invalid request, you are not a company'
 	
-### General database methods - get rid of when merging
-
-def login(id):
-	return [['a', 'b', 'c', 'd', 'e']]
-
 ### Run
 		
 if __name__ == "__main__":

@@ -80,15 +80,25 @@ def get_company(cid):
     info = c.execute('''SELECT * FROM companies WHERE cid = '{}' '''.format(cid))
     return list(info.fetchall()[0])
 
+def change_company(cid, name, uname, psw, phone, email, zc, county, state):
+    c.execute('''UPDATE companies SET name='{}', uname='{}', psw='{}', phone='{}', email='{}', zip='{}', county='{}', state='{}' WHERE cid='{}' '''.format(name, uname, psw, phone, email, zc, county, state, cid))
+    conn.commit()
+
 def get_student(sid):
     info = c.execute('''SELECT * FROM students WHERE sid = '{}' '''.format(sid))
     return list(info.fetchall()[0])
+
+def change_student(sid, name, uname, psw, uni, zc, county, state):
+    c.execute('''UPDATE students SET name='{}', uname='{}', psw='{}', uni='{}', zip='{}', county='{}', state='{}' WHERE sid='{}' '''.format(name, uname, psw, uni, zc, county, state, sid))
+    conn.commit()
 
 def create_group(name):
     gid = genID()
     c.execute('''INSERT INTO master_groups values('{}', '{}')'''.format(gid, name))
     c.execute('''CREATE TABLE '{}' (id text, timestamp text, content text)'''.format(gid))
     conn.commit()
+
+    return gid
 
 def get_groups():
     groups = c.execute('''SELECT * FROM master_groups''')
@@ -97,6 +107,10 @@ def get_groups():
         groups_list.append(list(row))
     return groups_list
 
+def set_group(sid, gid):
+    c.execute('''UPDATE students SET gid = '{}' WHERE sid = '{}' '''.format(gid, sid))
+    conn.commit()
+
 def create_announcement(gid, content):
     timestamp = time.strftime("%a, %d %b %Y %I:%M", time.localtime())
     c.execute('''INSERT INTO {} values('{}', '{}', '{}')'''.format(gid, genID(), timestamp, content))
@@ -104,7 +118,7 @@ def create_announcement(gid, content):
 
 def get_announcement(gid):
     announcements = []
-    info = c.execute('''SELECT * FROM {}'''.format(gid))
+    info = c.execute('''SELECT * FROM "{}"'''.format(gid))
     for row in info:
         announcements.append(list(row))
 
@@ -161,6 +175,6 @@ def close():
 
 if __name__ == '__main__':
     setup()
-    #--Tests--
-    print(get_groups())
+    #set_group('G5v63r8', '0N3iYU2')
+    # change_company('Ul86qZ8DlOar1Pu758ZQc1meUAfALm943I8p575LBWjL8ZCbK8', 'colin galen', 'galen_colin', '', '', 'tjhsst', '20479', 'Fairfax', 'VA')
     close()
