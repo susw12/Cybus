@@ -211,6 +211,14 @@ def update_company():
 
 		return 'ok'
 
+@app.route('/profile_company', methods=['GET'])
+def profile_company():
+	return render_template('profile_company.html')
+
+@app.route('/profile_student', methods=['GET'])
+def profile_student():
+	return render_template('profile_student.html')
+
 ### Student hub await sujay
 
 # Send HTML done
@@ -249,7 +257,7 @@ def join_group():
 
 	return 'ok'
 
-# Get announcements await aaron
+# Get announcements done
 @app.route('/list_announcements', methods=['GET'])
 def list_announcements():
 	type = request.cookies.get('type')

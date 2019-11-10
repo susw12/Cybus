@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Tablezzzzz</title>
+		<link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type="text/css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	</head>
+	<body>
+		Your username: <br>
+		<div id="uname"> </div> <br>
+		Your password: <br>
+		<div id="pword"> </div> <br>
+		Your name: <br>
+		<div id="name"> </div> <br>
+		Your university:
+		<div id="university"> </div> <br>
+		Your county: <br>
+		<div id="county"> </div> <br>
+		Your zip code: <br>
+		<div id="zip"> </div> <br>
+		Your state: <br>
+		<div id="state"> </div> <br>
+	</body>
+	<script> 		
+		arg_list = ['uname', 'pword', 'name', 'university', 'county', 'zip', 'state'];
+		const enter_key = 13;
+		
+		$(() => {
+			$.ajax({
+				method: 'GET',
+				url: '/get_student_info',
+				success: data => {
+					data = data['student'];
+					document.getElementById('uname').innerText = data[2];
+					document.getElementById('pword').innerText = data[3];
+					document.getElementById('name').innerText = data[1];
+					document.getElementById('university').innerText = data[4];
+					document.getElementById('county').innerText = data[6];
+					document.getElementById('zip').innerText = data[5];
+					document.getElementById('state').innerText = data[7];
+				}
+			});
+		});
+	</script>
+</html>                                		                            

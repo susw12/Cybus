@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Tablezzzzz</title>
+		<link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type="text/css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	</head>
+	<body>
+		Your username: <br>
+		<div id="uname"> </div> <br>
+		Your password: <br>
+		<div id="pword"> </div> <br>
+		Your name: <br>
+		<div id="name"> </div> <br>
+		Your phone number: <br>
+		<div id="phone"> </div> <br>
+		Your email: <br>
+		<div id="email"> </div> <br>
+		Your county: <br>
+		<div id="county"> </div> <br>
+		Your zip code: <br>
+		<div id="zip"> </div> <br>
+		Your state: <br>
+		<div id="state"> </div> <br>
+	</body>
+	<script> 		
+		arg_list = ['uname', 'pword', 'name', 'phone', 'email', 'county', 'zip', 'state'];
+		const enter_key = 13;
+		
+		$(() => {
+			$.ajax({
+				method: 'GET',
+				url: '/get_company_info',
+				success: data => {
+					data = data['company'];
+					document.getElementById('uname').innerText = data[2];
+					document.getElementById('pword').innerText = data[3];
+					document.getElementById('name').innerText = data[1];
+					document.getElementById('phone').innerText = data[4];
+					document.getElementById('email').innerText = data[5];
+					document.getElementById('county').innerText = data[7];
+					document.getElementById('zip').innerText = data[6];
+					document.getElementById('state').innerText = data[8];
+				}
+			});
+		});
+	</script>
+</html>                                		                            
