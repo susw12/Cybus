@@ -18,9 +18,13 @@
 		<div id="content"></div>
 	</body>
 	<script> 
-		var announcements, recipes, gid;
+		var announcements, recipes, gid, health_tags, num_tags;
 		
-		$(get_group);
+		$(() => {
+			get_group();
+			get_health_tags();
+			num_tags = 0;
+		});
 
 		function get_group() {
 			$.ajax({
@@ -119,19 +123,54 @@
 		function activate_recipe() {
 			let el = document.getElementById('content'), html = '';
 			
-			html += '<div class="search"><input id="q_recipe">';
+			html += '<div class="search">';
+			html += '<div id="health">Health tags (such as gluten-free): <br></div>';
+			html += '<button onclick="add_dropdown()">Add new tag</button>'
+			html += '<input id="q_recipe">';
 			html += '<button onclick="get_recipes()">Submit</button></div>';
 			html += '<div id="res"></div>';
 			
 			el.innerHTML = html;
 		}
+
+		function add_dropdown() {
+			html = `<input type="text" class="tag" list="tag_list_${num_tags}" id="tag_input_${num_tags}">`;
+			html += `<datalist id="tag_list_${num_tags}">`;
+			for (let el of health_tags) {
+				html += `<option value="${el}">`;
+			}
+			html += '</datalist>';
+			++num_tags;
+			
+			let el = document.getElementById('health');
+			el.insertAdjacentHTML('beforeend', html);
+		}
+
+		function get_health_tags() {
+			$.ajax({
+				method: 'GET',
+				url: '/get_health_tags',
+				success: data => {
+					health_tags = data['tags'];
+				}
+			});
+		}
 		
 		function get_recipes() {
-			let param = document.getElementById('q_recipe').value;
+			let query_list = [];
+			let nodes = document.getElementsByClassName('tag');
+			for (let el of nodes) {
+				query_list.push(el.value);
+			}
+			let query_string = document.getElementById('q_recipe').value;
+			console.log(query_list);
 			$.ajax({
 				method: 'GET',
 				url: '/list_recipes',
-				data: {'query': param},
+				data: {
+					'health_tags': query_list,
+					'query_string': query_string
+				},
 				success: data => {
 					recipes = data['recipes'];
 					put_recipes();
@@ -145,10 +184,16 @@
 			html += '<tr><th class="recipes">Recipes</th></tr>'
 			
 			for (let re of recipes) {
-				html += `<tr><td class="recipes">${re}</td></tr>`;
+				console.log(re);
+				html += `<tr><td class="recipes">${re['source']}:</td>`;
+				html += `<td><a href = "${re['source_url']}">${re['name']}</a></td>`;
+				html += '<tr>';
 			}
 			
 			html += "</table>";
+
+			if (recipes.length == 0) html += "No recipes found.";
+
 			el.innerHTML = html;
 		}
 	</script>

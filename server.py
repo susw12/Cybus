@@ -9,21 +9,6 @@ ID_LEN = 100
 
 ### Head - done
 
-def genID(id_len = ID_LEN, l = []):
-    while True:
-        s = ''
-        for i in range(id_len):
-            t = random.randint(0,2)
-            if (t == 0):
-                s += chr(ord('0') + random.randint(0, 9))
-            elif (t == 1):
-                s += chr(ord('a') + random.randint(0, 25))
-            else:
-                s += chr(ord('A') + random.randint(0, 25))
-        if (s not in l):
-            l.append(s)
-            return s
-
 app = Flask(__name__,
             static_url_path='', 
             static_folder='./public',
@@ -318,31 +303,28 @@ def put_announcement():
 
 	return 'ok'
 	
+### Recipes page
+
 @app.route('/list_recipes', methods=['GET'])
 def list_recipes():
-	query = request.args.get('query')
+	health_tags = request.args.getlist('health_tags[]')
+	query_string = request.args.get('query_string')
 	
-	print('get recipes', query)
+	print('get recipes', health_tags, query_string)
 	
-	recipes = get_recipes(query)
-	
+	recipes = db.get_recipes(query_string, health_tags)
+
+	# print(recipes)
+
 	return jsonify({'recipes': recipes})
 
-# 
-	
-# def get_recipes(query):
-	
-### Get products page
+@app.route('/get_health_tags', methods=['GET'])
+def get_health_tags():
+	tags = query_health_tags()
+	return jsonify({'tags': tags})
 
-# @app.route('/product_list', methods=['GET'])
-# def product_list():
-	# query = request.args.get('something')
-	
-# def get_products():
-	# return [
-		# ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-		# ['dwa', 'dwa', 'fqwasd', 'fwa', 'wad3qy', 't2qfwas', '2gtqwf', 'y2gew', '54jher']
-	# ]
+def query_health_tags():
+	return ['gluten', 'non']
 
 ### Invalid pages
 
@@ -357,4 +339,4 @@ def invalid_company():
 ### Run
 		
 if __name__ == "__main__":
-	app.run(host = 'localhost', port = 4054)
+	app.run(host = '0.0.0.0', port = 80)

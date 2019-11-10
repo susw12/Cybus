@@ -4,8 +4,11 @@ conn = sqlite3.connect('teenhacks.db', check_same_thread = False)
 
 c = conn.cursor()
 
-APP_KEY = "34d4f83429cfe1e57b09c59ad3f4c886"
-APP_ID = "22e4f2a8"
+APP_KEY_ING = "34d4f83429cfe1e57b09c59ad3f4c886"
+APP_ID_ING = "22e4f2a8"
+
+APP_ID_REC = '96c1e2f7'
+APP_KEY_REC = '3ebcdeef7ffd746d62f6ad3e60da28e6'
 
 def setup():
     #product table
@@ -53,9 +56,43 @@ def genID(l=[]):
             l.append(s)
             return s
 
+def get_recipes(name, tags=[]):
+    url = "https://api.edamam.com/search?q={}&app_id=${}&app_key=${}&from=0&to=10".format(name, APP_ID_REC, APP_KEY_REC)
+
+    for i in tags:
+        if i in ['balanced', 'high-fiber', 'high-protein', 'low-carb', 'low-fat', 'low-sodium']:
+            url += '&diet={}'.format(i)
+        elif i != '':
+            url += '&health={}'.format(i)
+
+    response = requests.get(url)
+
+    r = response.json()['hits']
+    recipes = []
+    for i in range(10):
+        recipes.append({})
+
+    for i, recipe in enumerate(r):
+        #name
+        recipes[i]['name'] = r[i]['recipe']['label']
+        recipes[i]['ingredients'] = r[i]['recipe']['ingredientLines']
+        recipes[i]['source'] = r[i]['recipe']['source']
+        recipes[i]['source_url'] = r[i]['recipe']['url']
+    
+    nonempty = []
+
+    for x in recipes:
+        if x != {}:
+            nonempty.append(x)
+
+    return nonempty
+
+def get_restrictions():
+    return ['high-fiber', 'high-protein', 'low-carb', 'low-fat', 'low-sodium', 'alcohol-free', 'celery-free', 'crustacean-free', 'dairy-free', 'egg-free', 'fish-free', 'fodmap-free', 'gluten-free', 'keto-friendly', 'kidney-friendly', 'low-potassium', 'lupine-free', 'mustard-free', 'low-fat-abs', 'No-oil-added', 'No-sugar', 'low-sugar', 'peanut-free', 'pork-free', 'meat-free', 'red-meat-free', 'sesame-free', 'shellfish-free', 'soy-free', 'sugar-conscious', 'tree-nut-free','wheat-free', 'vegetarian', 'vegan', 'pescatarian']
+
 def get_link(name):
     name = name.strip().replace(' ', "%20")
-    link = 'https://api.edamam.com/api/food-database/parser?nutrition-type=logging&ingr={}&app_id={}&app_key={}'.format(name, APP_ID, APP_KEY)
+    link = 'https://api.edamam.com/api/food-database/parser?nutrition-type=logging&ingr={}&app_id={}&app_key={}'.format(name, APP_ID_ING, APP_KEY_ING)
     return link
 
 def get_nutrients(link):
@@ -176,5 +213,5 @@ def close():
 if __name__ == '__main__':
     setup()
     #set_group('G5v63r8', '0N3iYU2')
-    # change_company('Ul86qZ8DlOar1Pu758ZQc1meUAfALm943I8p575LBWjL8ZCbK8', 'colin galen', 'galen_colin', '', '', 'tjhsst', '20479', 'Fairfax', 'VA')
+    #change_company('Ul86qZ8DlOar1Pu758ZQc1meUAfALm943I8p575LBWjL8ZCbK8', 'colin galen', 'galen_colin', '', '', 'tjhsst', '20479', 'Fairfax', 'VA')
     close()
