@@ -149,7 +149,7 @@ def set_group(sid, gid):
 
 def create_announcement(gid, content):
     timestamp = time.strftime("%a, %d %b %Y %I:%M", time.localtime())
-    c.execute('''INSERT INTO {} values('{}', '{}', '{}')'''.format(gid, genID(), timestamp, content))
+    c.execute('''INSERT INTO '{}' values('{}', '{}', '{}')'''.format(gid, genID(), timestamp, content))
     conn.commit()
 
 def get_announcement(gid):

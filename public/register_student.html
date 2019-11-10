@@ -1,55 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Tablezzzzz</title>
-		<link href="css/style.css" rel="stylesheet" type="text/css" />
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	</head>
-	<body>
-		Enter a username: <br>
-		<input id="uname"> <br>
-		Enter a password: <br>
-		<input id="pword"> <br>
-		Enter your name: <br>
-		<input id="name"> <br>
-		Enter your university: <br>
-		<input id="university"> <br>
-		Enter your county: <br>
-		<input id="county"> <br>
-		Enter your zip code: <br>
-		<input id="zip"> <br>
-		Enter your state: <br>
-		<input id="state"> <br>
-	</body>
-	<script> 		
-		arg_list = ['uname', 'pword', 'name', 'university', 'county', 'zip', 'state'];
-		const enter_key = 13;
-		
-		$(() => {
-			document.onkeydown = function(event) {
-				if (event.which == enter_key) {
-					json = {};
-					for (let arg of arg_list) {
-						json[arg] = document.getElementById(arg).value;
-					}
-					console.log(json);
-					$.ajax({
-						method: 'POST',
-						url: '/register_student',
-						data: json,
-						success: data => {
-							if (data === 'ok') {
-								window.location.href = '/student_hub';
-							} else {
-								console.log(data);
-							}
-						}
-					});
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>SB Admin - Register</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-dark">
+
+  <div class="container">
+    <div class="card card-register mx-auto mt-5">
+      <div class="card-header"><h3>Student Registration</h3></div>
+      <div class="card-body">
+			<style>
+				.error {
+					background-color: #ff7f7f !important;
+					color: #7f0000 !important;
+					border: 1px solid;
+					text-align: center;
+					border-color: #7f0000 !important;
+				}
+			</style>
+			<div class="form-group">
+				<div class="form-label-group" id="formres">
+				</div>
+			</div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-12">
+                <div class="form-label-group">
+                  <input type="text" id="name" class="form-control" placeholder="Full Name" required="required" autofocus="autofocus">
+                  <label for="name">Full Name</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-12">
+                  <div class="form-label-group">
+                    <input type="text" id="uname" class="form-control" placeholder="Username" required="required">
+                    <label for="uname">Username</label>
+                  </div>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-12">
+                  <div class="form-label-group">
+                      <input type="password" id="pword" class="form-control" placeholder="Password" required="required">
+                      <label for="pword">Password</label>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-12">
+                <div class="form-label-group">
+                  <input type="text" id="university" class="form-control" placeholder="University" required="required">
+                  <label for="university">University</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-4">
+                <div class="form-label-group">
+                  <input type="text" id="zip" class="form-control" placeholder="Zip" required="required">
+                  <label for="zip">Zip Code</label>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-label-group">
+                  <input type="text" id="county" class="form-control" placeholder="County" required="required">
+                  <label for="county">County</label>
+                </div>
+              </div>
+
+                <div class="col-md-4">
+                  <div class="form-label-group">
+                    <input type="text" id="state" class="form-control" placeholder="State" required="required">
+                    <label for="state">State</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          <a class="btn btn-primary btn-block" onclick="register()" href="#">Register</a>
+        <!-- </form> -->
+        <div class="text-center">
+          <a class="d-block small mt-3" href="/login_student">Student Login Page</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <script> 		
+      arg_list = ['uname', 'pword', 'name', 'university', 'county', 'zip', 'state'];
+      const enter_key = 13;
+      
+      $(() => {
+        document.onkeydown = function(event) {
+          if (event.which == enter_key) {
+            register();
+          }
+        }
+      });
+
+	  function register() {
+		json = {};
+		for (let arg of arg_list) {
+			json[arg] = document.getElementById(arg).value;
+		}
+		console.log(json);
+		$.ajax({
+			method: 'POST',
+			url: '/register_student',
+			data: json,
+			success: data => {
+				if (data === 'ok') {
+					window.location.href = '/student_hub';
+				} else {
+					$('#formres').addClass('error');
+						document.getElementById('formres').innerText = "Error: account already exists.";
 				}
 			}
 		});
-	</script>
-</html>                                		                            
+	  }
+    </script>
+
+</body>
+
+</html>

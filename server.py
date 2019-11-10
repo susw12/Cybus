@@ -281,7 +281,7 @@ def list_announcements():
 	id = request.cookies.get('id')
 	student = db.get_student(id)
 	gid = student[-1]
-	
+
 	list = db.get_announcement(gid)
 	
 	return jsonify({'announcements': list})

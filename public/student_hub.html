@@ -45,7 +45,12 @@
 			<!-- Sidebar -->
 			<ul class="sidebar navbar-nav">
 				<li class="nav-item">
-					<a id="aa" class="nav-link" onclick="activate_announcements()">
+					<a id="ap" class="nav-link" onclick="activate_profile()">
+						<span>Profile</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a id="aa" class="nav-link" onclick="get_group()">
 						<span>Announcements</span>
 					</a>
 				</li>
@@ -89,9 +94,11 @@
 
 	<script> 
 		var announcements, recipes, gid, health_tags, num_tags, tags, ingredients;
+		const enter_key = 13;
 		
 		$(() => {
-			get_group();
+			activate_profile();
+			get_announcements();
 			get_health_tags();
 			num_tags = 0;
 			$.ajax({
@@ -103,6 +110,43 @@
 			})
 		});
 
+		function activate_profile() {
+			if (!$('#ap').hasClass('active')) {
+				$('#ap').addClass('active');
+			}
+			if ($('#aa').hasClass('active')) {
+				$('#aa').removeClass('active');
+			}
+			if ($('#ar').hasClass('active')) {
+				$('#ar').removeClass('active');
+			}
+			if ($('#ai').hasClass('active')) {
+				$('#ai').removeClass('active');
+			}
+			$.ajax({
+				method: 'GET',
+				url: '/get_student_info',
+				success: data => {
+					data = data['student'];
+					let html = "";
+					html += create_element('uname', data[2]);
+					html += create_element('pword', data[3]);
+					html += create_element('name', data[1]);
+					html += create_element('university', data[4]);
+					html += create_element('county', data[6]);
+					html += create_element('zip', data[5]);
+					html += create_element('state', data[7]);
+					document.getElementById('content').innerHTML = html;
+				}
+			});
+		}
+
+		function create_element(elname, val) {
+			html = '';
+			html += elname + ": " + val + "<br>";
+			return html;
+		}
+
 		function get_group() {
 			$.ajax({
 				method: 'GET',
@@ -112,7 +156,7 @@
 						activate_group();
 					} else {
 						gid = data;
-						get_announcements();
+						get_announcements(1);
 					}
 				}
 			});
@@ -152,23 +196,26 @@
 				data: {'id': id},
 				success: data => {
 					gid = id;
-					get_announcements()
+					get_announcements(1)
 				}
 			});
 		}
 
-		function get_announcements() {
+		function get_announcements(not_init = 0) {
 			$.ajax({
 				method: 'GET',
 				url: '/list_announcements',
 				success: data => {
 					announcements = data['announcements'];
-					activate_announcements();
+					if (not_init) activate_announcements();
 				}
 			});
 		}
 		
 		function activate_announcements() {
+			if ($('#ap').hasClass('active')) {
+				$('#ap').removeClass('active');
+			}
 			if (!$('#aa').hasClass('active')) {
 				$('#aa').addClass('active');
 			}
@@ -182,16 +229,22 @@
 			
 			html += '<br><table>';
 			
-			html += '<tr><th class="announce">Announcements</th></tr>'
+			html += '<tr><div class="announce" style="font-size: 20px">Announcements</div></tr>'
 			
 			for (let an of announcements) {
-				html += `<tr><td class="announce">${an[1]}</td><td class="announce">${an[2]}</td></tr>`;
+				html += `<tr><div class="announce" style="font-size:12px">${an[1]}</div>${an[2]}</tr>`;
 			}
 			
-			html += "</table><br>";
+			html += "</table>";
 
-			html += "Create new announcement:<br><input id='announced'><br><button onclick='create()'>Send</button>";
+			html += "<input id='announced' placeholder='Create new announcement' style='width: 250px'><button onclick='create()'>Send</button>";
 			el.innerHTML = html;
+
+			document.getElementById('announced').onkeypress = event => {
+				if (event.which == enter_key) {
+					create();
+				}
+			}
 		}
 
 		function create() {
@@ -201,12 +254,15 @@
 				url: '/put_announcement',
 				data: {'content': con},
 				success: data => {
-					get_announcements()
+					get_announcements(1)
 				}
 			});
 		}
 		
 		function activate_recipes() {
+			if ($('#ap').hasClass('active')) {
+				$('#ap').removeClass('active');
+			}
 			if ($('#aa').hasClass('active')) {
 				$('#aa').removeClass('active');
 			}
@@ -292,6 +348,9 @@
 		}
 
 		function activate_ingredients() {
+			if ($('#ap').hasClass('active')) {
+				$('#ap').removeClass('active');
+			}
 			if ($('#aa').hasClass('active')) {
 				$('#aa').removeClass('active');
 			}
