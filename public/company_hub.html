@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Tablezzzzz</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+		<!-- Custom fonts for this template-->
+		<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+		<!-- Page level plugin CSS-->
+		<link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+	  
+		<!-- Custom styles for this template-->
+		<link href="css/sb-admin.css" rel="stylesheet">
+
+		<style>
+			.active {
+				color: white !important;
+			}
+		</style>
+	</head>
+	<body>
+			<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+			<a class="navbar-brand mr-1" id="name_container" style="color:white"></a>
+
+			<form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+			</form>
+
+			<ul class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0 navbar-nav ml-auto ml-md-0">
+				<li class="nav-item dropdown no-arrow">
+					<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fas fa-user-circle fa-fw"></i>
+					</a>
+					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+					<a class="dropdown-item" href="#" onclick="logout()" data-toggle="modal" data-target="#logoutModal">Logout</a>
+					</div>
+				</li>
+			</ul>
+		</nav>
+
+		<div id="wrapper">
+			<!-- Sidebar -->
+			<ul class="sidebar navbar-nav">
+				<li class="nav-item">
+					<a id="ap" class="nav-link" onclick="activate_profile()">
+						<span>Profile</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a id="at" class="nav-link" onclick="activate_tags()">
+						<span>Add products</span>
+					</a>
+				</li>
+			</ul>
+
+			<div id="content-wrapper">
+				<div class="container-fluid">
+					<div id="content"></div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+	<!-- Bootstrap core JavaScript-->
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  
+	<!-- Core plugin JavaScript-->
+	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  
+	<!-- Page level plugin JavaScript-->
+	<script src="vendor/datatables/jquery.dataTables.js"></script>
+	<script src="vendor/datatables/dataTables.bootstrap4.js"></script>
+  
+	<!-- Custom scripts for all pages-->
+	<script src="js/sb-admin.min.js"></script>
+  
+	<!-- Demo scripts for this page-->
+	<script src="js/demo/datatables-demo.js"></script>
+
+	<script> 
+		var tags = -1;
+		
+		$(() => {
+			get_tags();
+			activate_profile();
+			$.ajax({
+				method: 'GET',
+				url: '/get_company_info',
+				success: data => {
+					document.getElementById('name_container').innerText = data['company'][1];
+				}
+			})
+		});
+
+		function reselect(id) {
+			if (id == '#ap') {
+				if (!$('#ap').hasClass('active')) 
+					$('#ap').addClass('active');
+			}
+			else {
+				if ($('#ap').hasClass('active')) 
+					$('#ap').removeClass('active');
+			}
+
+			if (id == '#at') {
+				if (!$('#at').hasClass('active')) 
+					$('#at').addClass('active');
+			}
+			else {
+				if ($('#at').hasClass('active')) 
+					$('#at').removeClass('active');
+			}
+		}
+
+		function activate_profile() {
+			reselect('#ap');
+			$.ajax({
+				method: 'GET',
+				url: '/get_company_info',
+				success: data => {
+					data = data['company'];
+					let html = "";
+					html += create_element('uname', data[2]);
+					html += create_element('pword', data[3]);
+					html += create_element('name', data[1]);
+					html += create_element('phone', data[4]);
+					html += create_element('email', data[5]);
+					html += create_element('county', data[7]);
+					html += create_element('zip', data[6]);
+					html += create_element('state', data[8]);
+					document.getElementById('content').innerHTML = html;
+				}
+			});
+		}
+
+		function create_element(elname, val) {
+			html = '';
+			html += elname + ": " + val + "<br>";
+			return html;
+		}
+
+		function get_tags() {
+			$.ajax({
+				method: 'GET',
+				url: '/product_tags',
+				success: data => {
+					tags = data['tags'];
+				}
+			});
+		}
+		
+		function set_tags(taglist) {
+			let el = document.getElementById('tag_list'), html = '';
+			
+			for (let tag of taglist) {
+				push = `<option value='${tag}'>`;
+				html += push;
+			}
+			
+			el.innerHTML = html;
+		}
+
+		function activate_tags() {
+			reselect('#at');
+			let html = `
+			<div class="container">
+				<div class="card card-login mx-auto mt-5">
+					<div class="card-header"><h3>Add Product</h3></div>
+					<div class="card-body">
+						<form method='POST' action='/add_product'>
+							<div class="form-group">
+								<div class="form-row">
+									<div class="col-md-6">
+										<div class="form-label-group">
+											<input type="text" name="name" id="name" class="form-control" placeholder="Item Name" required="required">
+											<label for="name">Item Name</label>
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<div class="form-label-group">
+											<input type="text" name="price" id="price" class="form-control" placeholder="Price" required="required">
+											<label for="price">Price</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="form-row">
+									<div class="col-md-12">
+										<div class="form-label-group">
+											<input type="text" name="tag" id="tag" class="form-control" placeholder="Tag" required="required">
+											<label for="tag">Tag</label>
+										</div>	
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="form-row">
+									<div class="col-md-12">
+										<div class="form-label-group">
+											<input type="text" name="desc" id="desc" class="form-control" placeholder="Description" required="required">
+											<label for="desc">Description</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<br>
+							<button class="btn btn-primary btn-block" href="#" type="submit">Add</button>
+						</form>
+					</div>
+				</div>
+			</div>`;
+
+			document.getElementById('content').innerHTML = html;
+			get_tags();
+		}
+
+		function logout() {
+			$.get('/logout', () => {location.replace('/')});
+		}
+	</script>
+</html>                                		                            

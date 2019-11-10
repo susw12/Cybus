@@ -44,11 +44,11 @@
 		<div id="wrapper">
 			<!-- Sidebar -->
 			<ul class="sidebar navbar-nav">
-				<li class="nav-item">
+				<!-- <li class="nav-item">
 					<a id="ap" class="nav-link" onclick="activate_profile()">
 						<span>Profile</span>
 					</a>
-				</li>
+				</li> -->
 				<li class="nav-item">
 					<a id="aa" class="nav-link" onclick="get_group()">
 						<span>Announcements</span>
@@ -92,12 +92,47 @@
 	<!-- Demo scripts for this page-->
 	<script src="js/demo/datatables-demo.js"></script>
 
+	<style>
+		.multiselect {
+			width: 200px;
+			}
+
+			.selectBox {
+			position: relative;
+			}
+
+			.selectBox select {
+			width: 100%;
+			font-weight: bold;
+			}
+
+			.overSelect {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			}
+
+			#checkboxes {
+			display: none;
+			border: 1px #dadada solid;
+			}
+
+			#checkboxes label {
+			display: block;
+			}
+
+			#checkboxes label:hover {
+			background-color: #1e90ff;
+			}
+	</style>
 	<script> 
 		var announcements, recipes, gid, health_tags, num_tags, tags, ingredients;
 		const enter_key = 13;
 		
 		$(() => {
-			activate_profile();
+			// activate_profile();
 			get_announcements();
 			get_health_tags();
 			num_tags = 0;
@@ -110,42 +145,70 @@
 			})
 		});
 
-		function activate_profile() {
-			if (!$('#ap').hasClass('active')) {
-				$('#ap').addClass('active');
+		function reselect(id) {
+			// if (id == '#ap') {
+			// 	if (!$('#ap').hasClass('active')) 
+			// 		$('#ap').addClass('active');
+			// }
+			// else {
+			// 	if ($('#ap').hasClass('active')) 
+			// 		$('#ap').removeClass('active');
+			// }
+
+			if (id == '#aa') {
+				if (!$('#aa').hasClass('active')) 
+					$('#aa').addClass('active');
 			}
-			if ($('#aa').hasClass('active')) {
-				$('#aa').removeClass('active');
+			else {
+				if ($('#aa').hasClass('active')) 
+					$('#aa').removeClass('active');
 			}
-			if ($('#ar').hasClass('active')) {
-				$('#ar').removeClass('active');
+
+			if (id == '#ar') {
+				if (!$('#ar').hasClass('active'))
+					$('#ar').addClass('active');
 			}
-			if ($('#ai').hasClass('active')) {
-				$('#ai').removeClass('active');
+			else {
+				if ($('#ar').hasClass('active'))
+					$('#ar').removeClass('active');
 			}
-			$.ajax({
-				method: 'GET',
-				url: '/get_student_info',
-				success: data => {
-					data = data['student'];
-					let html = "";
-					html += create_element('uname', data[2]);
-					html += create_element('pword', data[3]);
-					html += create_element('name', data[1]);
-					html += create_element('university', data[4]);
-					html += create_element('county', data[6]);
-					html += create_element('zip', data[5]);
-					html += create_element('state', data[7]);
-					document.getElementById('content').innerHTML = html;
-				}
-			});
+
+			if (id == '#ai') {
+				if (!$('#ai').hasClass('active')) 
+					$('#ai').addClass('active');
+			}
+			else {
+				if ($('#ai').hasClass('active')) 
+					$('#ai').removeClass('active');
+			}
 		}
 
-		function create_element(elname, val) {
-			html = '';
-			html += elname + ": " + val + "<br>";
-			return html;
-		}
+		// function activate_profile() {
+		// 	reselect('#ap');
+
+		// 	$.ajax({
+		// 		method: 'GET',
+		// 		url: '/get_student_info',
+		// 		success: data => {
+		// 			data = data['student'];
+		// 			let html = "";
+		// 			html += create_element('uname', data[2]);
+		// 			html += create_element('pword', data[3]);
+		// 			html += create_element('name', data[1]);
+		// 			html += create_element('university', data[4]);
+		// 			html += create_element('county', data[6]);
+		// 			html += create_element('zip', data[5]);
+		// 			html += create_element('state', data[7]);
+		// 			document.getElementById('content').innerHTML = html;
+		// 		}
+		// 	});
+		// }
+
+		// function create_element(elname, val) {
+		// 	html = '';
+		// 	html += elname + ": " + val + "<br>";
+		// 	return html;
+		// }
 
 		function get_group() {
 			$.ajax({
@@ -213,18 +276,7 @@
 		}
 		
 		function activate_announcements() {
-			if ($('#ap').hasClass('active')) {
-				$('#ap').removeClass('active');
-			}
-			if (!$('#aa').hasClass('active')) {
-				$('#aa').addClass('active');
-			}
-			if ($('#ar').hasClass('active')) {
-				$('#ar').removeClass('active');
-			}
-			if ($('#ai').hasClass('active')) {
-				$('#ai').removeClass('active');
-			}
+			reselect('#aa');
 			let el = document.getElementById('content'), html = 'Your group ID: ' + gid + '<br>';
 			
 			html += '<br><table>';
@@ -258,44 +310,80 @@
 				}
 			});
 		}
+
+		var expanded = [];
+		
+		function init_checkboxes() {
+			expanded = [];
+			for (let i = 0; i < 3; i++) {
+				expanded.push(false);
+			}
+		}
+
+		function showCheckboxes(id) {
+			console.log(id);
+			var checkboxes = document.getElementById("checkboxes_" + id);
+			if (!expanded[id]) {
+				checkboxes.style.display = "block !important";
+				expanded[id] = true;
+			} else {
+				checkboxes.style.display = "none !important";
+				expanded[id] = false;
+			}
+		}
+
+		function get_dropdown(id) {
+			return `
+			<form>
+				<div class="multiselect">
+					<div class="selectBox" onclick="showCheckboxes(${id})">
+						<select>
+							<option>Select an option</option>
+						</select>
+						<div class="overSelect"></div>
+					</div>
+					<div id="checkboxes_${id}" style="display: none !important">
+						<label for="one_${id}">
+							<input type="checkbox" id="one_${id}" />First checkbox</label>
+						<label for="two_${id}">
+							<input type="checkbox" id="two_${id}" />Second checkbox</label>
+						<label for="three_${id}">
+							<input type="checkbox" id="three_${id}" />Third checkbox</label>
+					</div>
+				</div>
+			</form>
+			`;
+		}
 		
 		function activate_recipes() {
-			if ($('#ap').hasClass('active')) {
-				$('#ap').removeClass('active');
-			}
-			if ($('#aa').hasClass('active')) {
-				$('#aa').removeClass('active');
-			}
-			if (!$('#ar').hasClass('active')) {
-				$('#ar').addClass('active');
-			}
-			if ($('#ai').hasClass('active')) {
-				$('#ai').removeClass('active');
-			}
+			reselect('#ar');
 			let el = document.getElementById('content'), html = '';
 			
 			html += '<div class="search">';
-			html += '<div id="health">Health tags (such as gluten-free): <br></div>';
-			html += '<button onclick="add_dropdown()">Add new tag</button>'
-			html += '<input id="q_recipe">';
-			html += '<button onclick="get_recipes()">Submit</button></div>';
+			// html += '<div id="health">Health tags (such as gluten-free): <br></div>';
+			// html += '<button onclick="add_dropdown()">Add new tag</button>'
+			html += '<input id="q_recipe" style="width:90% !important">';
+			html += '<button onclick="get_recipes()" style="width:10% !important">Submit</button></div>';
+			for (let i = 0; i < 3; i++) {
+				html += get_dropdown(i);
+			}
 			html += '<div id="res"></div>';
 			
 			el.innerHTML = html;
 		}
 
-		function add_dropdown() {
-			html = `<input type="text" class="tag" list="tag_list_${num_tags}" id="tag_input_${num_tags}">`;
-			html += `<datalist id="tag_list_${num_tags}">`;
-			for (let el of health_tags) {
-				html += `<option value="${el}">`;
-			}
-			html += '</datalist>';
-			++num_tags;
+		// function add_dropdown() {
+		// 	html = `<input type="text" class="tag" list="tag_list_${num_tags}" id="tag_input_${num_tags}">`;
+		// 	html += `<datalist id="tag_list_${num_tags}">`;
+		// 	for (let el of health_tags) {
+		// 		html += `<option value="${el}">`;
+		// 	}
+		// 	html += '</datalist>';
+		// 	++num_tags;
 			
-			let el = document.getElementById('health');
-			el.insertAdjacentHTML('beforeend', html);
-		}
+		// 	let el = document.getElementById('health');
+		// 	el.insertAdjacentHTML('beforeend', html);
+		// }
 
 		function get_health_tags() {
 			$.ajax({
@@ -348,23 +436,14 @@
 		}
 
 		function activate_ingredients() {
-			if ($('#ap').hasClass('active')) {
-				$('#ap').removeClass('active');
-			}
-			if ($('#aa').hasClass('active')) {
-				$('#aa').removeClass('active');
-			}
-			if ($('#ar').hasClass('active')) {
-				$('#ar').removeClass('active');
-			}
-			if (!$('#ai').hasClass('active')) {
-				$('#ai').addClass('active');
-			}
+			reselect('#ai');
 			let el = document.getElementById('content'), html = '';
 			
-			html += '<div class="search">';
-			html += '<input id="q_ingredient">';
-			html += '<button onclick="get_ingredient_tags()">Submit</button></div>';
+			html += `<div class="search" style="width: 100%; margin: 0px !important; border: 0px !important; 
+			padding: 0px !important;">`;
+			html += '<input id="q_ingredient" style="width: 90%; border-top-left-radius: 10px; border-bottom-left-radius: 10px">';
+			html += `<button onclick="get_ingredient_tags()" style="width: 10%
+			; border-top-right-radius: 10px; border-bottom-right-radius: 10px">Submit</button></div>`;
 			html += '<div id="res"></div>';
 			
 			el.innerHTML = html;
@@ -387,14 +466,19 @@
 		}
 
 		function put_tags() {
-			let el = document.getElementById('res'), html = '<b>Tags:</b><br>';
+			let el = document.getElementById('res'), html = '<center><b>Results (click on one):</b><br>';
 			for (let tag of tags) {
 				html += `<div onclick='query_tag("${tag}")'>${tag}</div>`;
 			}
+			if (tags.length == 0) html += "None found.";
+			html += '</center>';
 			el.innerHTML = html;
 		}
 
+		var last;
+
 		function query_tag(tag) {
+			last = tag;
 			$.ajax({
 				method: 'GET',
 				url: '/get_ingredients',
@@ -409,11 +493,39 @@
 		}
 
 		function put_ingredients() {
-			let el = document.getElementById('res'), html = '';
+			let el = document.getElementById('res'), html = '<center>Searched for: ' + last + '</center><br>';
+
+			if (ingredients.length > 0) {
+				html += `<div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" margin="0px" padding="0px">
+                <thead>
+                  <tr>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Offered by</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+					<th>Item Name</th>
+                    <th>Price</th>
+                    <th>Offered by</th>
+                    <th>Description</th>
+                  </tr>
+                </tfoot>`;
+			html += '<tbody>';
 			for (let ingredient of ingredients) {
-				html += `${ingredient[1]}|${ingredient[9]}<br>`;
+				html += `<tr><td>${ingredient[2]}</td><td>${ingredient[1]}</td>
+				<td>${ingredient[9]}</td><td>${ingredient[4]}</td></tr>`;
 			}
+			html += '</tbody>'
+
+			html += '</div>';
 			el.innerHTML = html;
+			}
+			
 		}
 		
 		function logout() {

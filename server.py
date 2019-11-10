@@ -40,7 +40,7 @@ def add_product():
 		print("add_product", price, name, tag, desc, id)
 		
 		# later add no back button - https://stackoverflow.com/questions/20652784/flask-back-button-returns-to-session-even-after-logout
-		return redirect('/add_product')
+		return redirect('/company_hub')
 
 # Get list of tags done
 @app.route('/product_tags', methods=['GET'])
@@ -216,19 +216,10 @@ def profile_company():
 	if (not type):
 		return redirect('/')
 	elif (type != 'company'):
-		return redirect('/profile_student')
-	return render_template('profile_company.html')
+		return redirect('/student_hub')
+	return render_template('/company_hub.html')
 
-@app.route('/profile_student', methods=['GET'])
-def profile_student():
-	type = request.cookies.get('type')
-	if (not type):
-		return redirect('/')
-	elif (type != 'student'):
-		return redirect('/profile_company')
-	return render_template('profile_student.html')
-
-### Student hub await sujay
+### Student hub await sujay0
 
 # Send HTML done
 @app.route('/student_hub')
@@ -240,6 +231,19 @@ def student_hub():
 		return redirect('/')
 	elif (type != 'student'):
 		return redirect('/profile_company')
+	
+	return res
+
+# Send HTML done
+@app.route('/company_hub')
+def company_hub():
+	res = make_response(render_template('company_hub.html'))
+	
+	type = request.cookies.get('type')
+	if (not type):
+		return redirect('/')
+	elif (type != 'company'):
+		return redirect('/profile_student')
 	
 	return res
 
