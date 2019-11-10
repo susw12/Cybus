@@ -29,19 +29,21 @@ app = Flask(__name__,
             static_folder='./public',
             template_folder='./public')
 			
-### Add product page - progress
+### Add product page - done
 
-# Send HTML, process form progress
+# Send HTML, process form done
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
+	type = request.cookies.get('type')
+	if (not type):
+		return redirect('/')
+	elif (type != 'company'):
+		return redirect('/student_hub')
+	
 	if (request.method == 'GET'):
 		res = make_response(render_template('add_product.html'))
 		return res
 	else:
-		type = request.cookies.get('type')
-		if (not type or type != 'company'):
-			return redirect('/invalid_company')
-			
 		name = request.form['name']
 		price = request.form['price']
 		desc = request.form['desc']
@@ -55,13 +57,13 @@ def add_product():
 		# later add no back button - https://stackoverflow.com/questions/20652784/flask-back-button-returns-to-session-even-after-logout
 		return redirect('/add_product')
 
-# Get list of tags await aaron
+# Get list of tags done
 @app.route('/product_tags', methods=['GET'])
 def product_tags():
 	tags = db.get_tags('')
 	return jsonify({'tags': tags})
 
-### Register/login progress
+### Register/login done
 
 @app.route('/register_student', methods=['GET', 'POST'])
 def register_student():
@@ -168,6 +170,12 @@ def get_student_info():
 
 @app.route('/update_student', methods=['GET', 'POST'])
 def update_student():
+	type = request.cookies.get('type')
+	if (not type):
+		return redirect('/')
+	elif (type != 'student'):
+		return redirect('/update_company')
+
 	if (request.method == 'GET'):
 		return render_template('update_student.html')
 	else:
@@ -193,6 +201,12 @@ def get_company_info():
 
 @app.route('/update_company', methods=['GET', 'POST'])
 def update_company():
+	type = request.cookies.get('type')
+	if (not type):
+		return redirect('/')
+	elif (type != 'company'):
+		return redirect('/update_student')
+
 	if (request.method == 'GET'):
 		return render_template('update_company.html')
 	else:
@@ -213,10 +227,20 @@ def update_company():
 
 @app.route('/profile_company', methods=['GET'])
 def profile_company():
+	type = request.cookies.get('type')
+	if (not type):
+		return redirect('/')
+	elif (type != 'company'):
+		return redirect('/profile_student')
 	return render_template('profile_company.html')
 
 @app.route('/profile_student', methods=['GET'])
 def profile_student():
+	type = request.cookies.get('type')
+	if (not type):
+		return redirect('/')
+	elif (type != 'student'):
+		return redirect('/profile_company')
 	return render_template('profile_student.html')
 
 ### Student hub await sujay
@@ -227,8 +251,11 @@ def student_hub():
 	res = make_response(render_template('student_hub.html'))
 	
 	type = request.cookies.get('type')
-	if (not type or type != 'student'):
-		return redirect('/invalid_student')
+	if (not type):
+		return redirect('/')
+	elif (type != 'student'):
+		return redirect('/profile_company')
+	
 	return res
 
 @app.route('/student_group', methods=['GET'])
@@ -261,8 +288,10 @@ def join_group():
 @app.route('/list_announcements', methods=['GET'])
 def list_announcements():
 	type = request.cookies.get('type')
-	if (not type or type != 'student'):
-		return redirect('/invalid_student')
+	if (not type):
+		return redirect('/')
+	elif (type != 'student'):
+		return redirect('/profile_company')
 	
 	id = request.cookies.get('id')
 	student = db.get_student(id)
@@ -274,6 +303,12 @@ def list_announcements():
 
 @app.route('/put_announcement', methods=['POST'])
 def put_announcement():
+	type = request.cookies.get('type')
+	if (not type):
+		return redirect('/')
+	elif (type != 'student'):
+		return redirect('/profile_company')
+
 	id = request.cookies.get('id')
 	student = db.get_student(id)
 	gid = student[-1]
