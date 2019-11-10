@@ -114,16 +114,16 @@
 			bottom: 0;
 			}
 
-			#checkboxes {
+			.checkboxes {
 			display: none;
 			border: 1px #dadada solid;
 			}
 
-			#checkboxes label {
+			.checkboxes label {
 			display: block;
 			}
 
-			#checkboxes label:hover {
+			.checkboxes label:hover {
 			background-color: #1e90ff;
 			}
 	</style>
@@ -133,7 +133,8 @@
 		
 		$(() => {
 			// activate_profile();
-			get_announcements();
+			gid = -1;
+			get_group();
 			get_health_tags();
 			num_tags = 0;
 			$.ajax({
@@ -154,12 +155,12 @@
 			// 	if ($('#ap').hasClass('active')) 
 			// 		$('#ap').removeClass('active');
 			// }
+			console.log(id);
 
 			if (id == '#aa') {
 				if (!$('#aa').hasClass('active')) 
 					$('#aa').addClass('active');
-			}
-			else {
+			} else {
 				if ($('#aa').hasClass('active')) 
 					$('#aa').removeClass('active');
 			}
@@ -167,8 +168,7 @@
 			if (id == '#ar') {
 				if (!$('#ar').hasClass('active'))
 					$('#ar').addClass('active');
-			}
-			else {
+			} else {
 				if ($('#ar').hasClass('active'))
 					$('#ar').removeClass('active');
 			}
@@ -176,8 +176,7 @@
 			if (id == '#ai') {
 				if (!$('#ai').hasClass('active')) 
 					$('#ai').addClass('active');
-			}
-			else {
+			} else {
 				if ($('#ai').hasClass('active')) 
 					$('#ai').removeClass('active');
 			}
@@ -211,6 +210,7 @@
 		// }
 
 		function get_group() {
+			reselect('#aa');
 			$.ajax({
 				method: 'GET',
 				url: '/student_group',
@@ -228,11 +228,11 @@
 		function activate_group() {
 			let el = document.getElementById('content'), html = '<br>';
 			
-			html += 'Create group: <br> <input id="groupname"></input> <br>';
-			html += '<button onclick="create_group()">Create group</button> <br>';
-
-			html += 'Join group (enter group id): <br> <input id="joinid"></input> <br>';
-			html += '<button onclick="join_group()">Join group</button> <br>';
+			html += '<center>Create group: <br> <input id="groupname" style=""></input><br>';
+			html += '<button class="btn btn-primary" onclick="create_group()" style="margin-top: 5px">Create group</button> <br><br>';
+			
+			html += 'Join group (enter group id): <br> <input id="joinid" style=""></input><br>';
+			html += '<button class="btn btn-primary" onclick="join_group()" style="margin-top: 5px">Join group</button> <br><br></center>';
 			
 			el.innerHTML = html;
 		}
@@ -265,6 +265,7 @@
 		}
 
 		function get_announcements(not_init = 0) {
+			if (gid == -1) return;
 			$.ajax({
 				method: 'GET',
 				url: '/list_announcements',
@@ -276,7 +277,6 @@
 		}
 		
 		function activate_announcements() {
-			reselect('#aa');
 			let el = document.getElementById('content'), html = 'Your group ID: ' + gid + '<br>';
 			
 			html += '<br><table>';
@@ -289,7 +289,8 @@
 			
 			html += "</table><br>";
 
-			html += "<input id='announced' placeholder='Create new announcement' style='width: 250px'><button onclick='create()'>Send</button>";
+			html += `<input id='announced' placeholder='Create new announcement' style='width: 250px
+			; border-top-left-radius: 10px; border-bottom-left-radius: 10px'><button onclick='create()' style='btn btn-primary border-top-right-radius: 10px; border-bottom-right-radius: 10px'>Send</button>`;
 			el.innerHTML = html;
 
 			document.getElementById('announced').onkeypress = event => {
@@ -323,36 +324,111 @@
 		function showCheckboxes(id) {
 			console.log(id);
 			var checkboxes = document.getElementById("checkboxes_" + id);
+			console.log(checkboxes);
 			if (!expanded[id]) {
-				checkboxes.style.display = "block !important";
+				checkboxes.style.display = "block";
 				expanded[id] = true;
 			} else {
-				checkboxes.style.display = "none !important";
+				checkboxes.style.display = "none";
 				expanded[id] = false;
 			}
 		}
+		
+		let dict = {}, arr = []
 
 		function get_dropdown(id) {
-			return `
-			<form>
-				<div class="multiselect">
-					<div class="selectBox" onclick="showCheckboxes(${id})">
-						<select>
-							<option>Select an option</option>
-						</select>
-						<div class="overSelect"></div>
-					</div>
-					<div id="checkboxes_${id}" style="display: none !important">
-						<label for="one_${id}">
-							<input type="checkbox" id="one_${id}" />First checkbox</label>
-						<label for="two_${id}">
-							<input type="checkbox" id="two_${id}" />Second checkbox</label>
-						<label for="three_${id}">
-							<input type="checkbox" id="three_${id}" />Third checkbox</label>
-					</div>
+			let html = `
+			<div id="dropdowns">
+			 <div class="multiselect" style="float: left; position: relative; top: 5px; border-top-left-radius: 10px; border-bottom-left-radius: 10px">
+				<div class="selectBox" onclick="showCheckboxes(0)">
+					<select>
+						<option>Allergies</option>
+					</select>
+					<div class="overSelect dropdown-menu"></div>
 				</div>
-			</form>
+				<div class="checkboxes" id="checkboxes_0" style="display: none">
+					<label for="00">
+						<input type="checkbox" id="00" />Peanut</label>
+					<label for="10">
+						<input type="checkbox" id="10" />Eggs</label>
+					<label for="20">
+						<input type="checkbox" id="20" />Soy</label>
+					<label for="30">
+						<input type="checkbox" id="30" />Shellfish</label>
+					<label for="40">
+						<input type="checkbox" id="40" />Tree nuts</label>
+					<label for="50">
+						<input type="checkbox" id="50" />Dairy</label>
+				</div>
+			</div>
 			`;
+			dict['Peanut'] = 'peanut-free';
+			dict['Eggs'] = 'egg-free';
+			dict['Soy'] = 'soy-free';
+			dict['Shellfish'] = 'shellfish-free';
+			dict['Tree nuts'] = 'tree-nut-free';
+			dict['Dairy'] = 'dairy-free';
+			arr.push(['Peanut', 'Eggs', 'Soy', 'Shellfish', 'Tree nuts', 'Dairy']);
+			
+			html += `
+			<div class="multiselect" style="float: left; position: relative; top: 5px;">
+				<div class="selectBox" onclick="showCheckboxes(1)">
+					<select>
+						<option>Diet</option>
+					</select>
+					<div class="overSelect dropdown-menu"></div>
+				</div>
+				<div class="checkboxes" id="checkboxes_1" style="display: none">
+					<label for="01">
+						<input type="checkbox" id="01" />Balanced</label>
+					<label for="11">
+						<input type="checkbox" id="11" />High fiber</label>
+					<label for="21">
+						<input type="checkbox" id="21" />High protein</label>
+					<label for="31">
+						<input type="checkbox" id="31" />Low carb</label>
+					<label for="41">
+						<input type="checkbox" id="41" />Low fat</label>
+					<label for="51">
+						<input type="checkbox" id="51" />Low sodium</label>
+				</div>
+			</div>
+			`;
+			dict['Balanced'] = 'balanced';
+			dict['High fiber'] = 'high-fiber';
+			dict['High protein'] = 'high-protein';
+			dict['Low carb'] = 'low-carb';
+			dict['Low fat'] = 'low-fat';
+			dict['Low sodium'] = 'low-sodium';
+			arr.push(['Balanced', 'High fiber', 'High protein', 'Low carb', 'Low fat', 'Low sodium'])
+
+			html += `
+			<div class="multiselect" style="float: left; position: relative; top: 5px; border-top-right-radius: 10px; border-bottom-right-radius: 10px">
+				<div class="selectBox" onclick="showCheckboxes(2)">
+					<select>
+						<option>Special diets</option>
+					</select>
+					<div class="overSelect dropdown-menu"></div>
+				</div>
+				<div class="checkboxes" id="checkboxes_2" style="display: none">
+					<label for="02">
+						<input type="checkbox" id="02" />Vegetarian</label>
+					<label for="12">
+						<input type="checkbox" id="12" />Keto friendly</label>
+					<label for="22">
+						<input type="checkbox" id="22" />Vegan</label>
+					<label for="32">
+						<input type="checkbox" id="32" />Pescatarian</label>
+				</div>
+			</div></div>
+			`;
+			dict['Vegetarian'] = 'vegetarian';
+			dict['Keto friendly'] = 'keto-friendly';
+			dict['Vegan'] = 'vegan';
+			dict['Pescatarian'] = 'pescatarian';
+			arr.push(['Vegetarian', 'Keto friendly', 'Vegan', 'Pescatarian'])
+
+			return html;
 		}
 		
 		function activate_recipes() {
@@ -362,11 +438,9 @@
 			html += '<div class="search">';
 			// html += '<div id="health">Health tags (such as gluten-free): <br></div>';
 			// html += '<button onclick="add_dropdown()">Add new tag</button>'
-			html += '<input id="q_recipe" style="width:90% !important">';
-			html += '<button onclick="get_recipes()" style="width:10% !important">Submit</button></div>';
-			for (let i = 0; i < 3; i++) {
-				html += get_dropdown(i);
-			}
+			html += '<input id="q_recipe" style="width:90% !important; border-top-left-radius: 10px; border-bottom-left-radius: 10px">';
+			html += '<button onclick="get_recipes()" style="btn btn-primary width:10% !important; border-top-right-radius: 10px; border-bottom-right-radius: 10px">Submit</button></div>';
+			html += get_dropdown();
 			html += '<div id="res"></div>';
 			
 			el.innerHTML = html;
@@ -397,6 +471,14 @@
 		
 		function get_recipes() {
 			let query_list = [];
+			for (let i = 0; i < 3; i++) {
+				for (let j = 0; j < arr[i].length; j++) {
+					let id = '' + j + i;
+					let on = document.getElementById(id).checked;
+					if (on) query_list.push(dict[arr[i][j]]);
+				}
+			}
+			console.log(query_list);
 			let nodes = document.getElementsByClassName('tag');
 			for (let el of nodes) {
 				query_list.push(el.value);
@@ -418,6 +500,7 @@
 		}
 		
 		function put_recipes() {
+			document.getElementById('dropdowns').innerHTML = '';
 			let el = document.getElementById('res'), html = '<br><table>';
 			
 			html += '<tr><th class="recipes">Recipes</th></tr>'
@@ -442,7 +525,7 @@
 			html += `<div class="search" style="width: 100%; margin: 0px !important; border: 0px !important; 
 			padding: 0px !important;">`;
 			html += '<input id="q_ingredient" style="width: 90%; border-top-left-radius: 10px; border-bottom-left-radius: 10px">';
-			html += `<button onclick="get_ingredient_tags()" style="width: 10%
+			html += `<button onclick="get_ingredient_tags()" style="btn btn-primary width: 10%
 			; border-top-right-radius: 10px; border-bottom-right-radius: 10px">Submit</button></div>`;
 			html += '<div id="res"></div>';
 			
