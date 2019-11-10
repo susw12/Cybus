@@ -5,25 +5,102 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Tablezzzzz</title>
-		<link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type="text/css" />
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+		<!-- Custom fonts for this template-->
+		<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+		<!-- Page level plugin CSS-->
+		<link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+	  
+		<!-- Custom styles for this template-->
+		<link href="css/sb-admin.css" rel="stylesheet">
+
+		<style>
+			.active {
+				color: white !important;
+			}
+		</style>
 	</head>
 	<body>
-		<div class="tab">
-		  <button class="tablinks" onclick="activate_announcements()">Announcements</button>
-		  <button class="tablinks" onclick="activate_recipe()">Recipe</button>
-		  <button class="tablinks" onclick="activate_ingredients()">Ingredients</button>
+		<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+			<a class="navbar-brand mr-1" id="name_container" style="color:white"></a>
+
+			<form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+			</form>
+
+			<ul class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0 navbar-nav ml-auto ml-md-0">
+				<li class="nav-item dropdown no-arrow">
+					<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fas fa-user-circle fa-fw"></i>
+					</a>
+					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+					<a class="dropdown-item" href="#" onclick="logout()" data-toggle="modal" data-target="#logoutModal">Logout</a>
+					</div>
+				</li>
+			</ul>
+		</nav>
+
+		<div id="wrapper">
+			<!-- Sidebar -->
+			<ul class="sidebar navbar-nav">
+				<li class="nav-item">
+					<a id="aa" class="nav-link" onclick="activate_announcements()">
+						<span>Announcements</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a id="ar" class="nav-link" onclick="activate_recipes()">
+						<span>Recipes</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a id="ai" class="nav-link" onclick="activate_ingredients()">
+						<span>Ingredients</span>
+					</a>
+				</li>
+			</ul>
+
+			<div id="content-wrapper">
+				<div class="container-fluid">
+					<div id="content"></div>
+				</div>
+			</div>
 		</div>
 		
-		<div id="content"></div>
 	</body>
+
+	<!-- Bootstrap core JavaScript-->
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  
+	<!-- Core plugin JavaScript-->
+	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  
+	<!-- Page level plugin JavaScript-->
+	<script src="vendor/datatables/jquery.dataTables.js"></script>
+	<script src="vendor/datatables/dataTables.bootstrap4.js"></script>
+  
+	<!-- Custom scripts for all pages-->
+	<script src="js/sb-admin.min.js"></script>
+  
+	<!-- Demo scripts for this page-->
+	<script src="js/demo/datatables-demo.js"></script>
+
 	<script> 
-		var announcements, recipes, gid, health_tags, num_tags;
+		var announcements, recipes, gid, health_tags, num_tags, tags, ingredients;
 		
 		$(() => {
 			get_group();
 			get_health_tags();
 			num_tags = 0;
+			$.ajax({
+				method: 'GET',
+				url: '/get_student_info',
+				success: data => {
+					document.getElementById('name_container').innerText = data['student'][1];
+				}
+			})
 		});
 
 		function get_group() {
@@ -92,6 +169,15 @@
 		}
 		
 		function activate_announcements() {
+			if (!$('#aa').hasClass('active')) {
+				$('#aa').addClass('active');
+			}
+			if ($('#ar').hasClass('active')) {
+				$('#ar').removeClass('active');
+			}
+			if ($('#ai').hasClass('active')) {
+				$('#ai').removeClass('active');
+			}
 			let el = document.getElementById('content'), html = 'Your group ID: ' + gid + '<br>';
 			
 			html += '<br><table>';
@@ -120,7 +206,16 @@
 			});
 		}
 		
-		function activate_recipe() {
+		function activate_recipes() {
+			if ($('#aa').hasClass('active')) {
+				$('#aa').removeClass('active');
+			}
+			if (!$('#ar').hasClass('active')) {
+				$('#ar').addClass('active');
+			}
+			if ($('#ai').hasClass('active')) {
+				$('#ai').removeClass('active');
+			}
 			let el = document.getElementById('content'), html = '';
 			
 			html += '<div class="search">';
@@ -163,7 +258,7 @@
 				query_list.push(el.value);
 			}
 			let query_string = document.getElementById('q_recipe').value;
-			console.log(query_list);
+
 			$.ajax({
 				method: 'GET',
 				url: '/list_recipes',
@@ -184,7 +279,6 @@
 			html += '<tr><th class="recipes">Recipes</th></tr>'
 			
 			for (let re of recipes) {
-				console.log(re);
 				html += `<tr><td class="recipes">${re['source']}:</td>`;
 				html += `<td><a href = "${re['source_url']}">${re['name']}</a></td>`;
 				html += '<tr>';
@@ -195,6 +289,76 @@
 			if (recipes.length == 0) html += "No recipes found.";
 
 			el.innerHTML = html;
+		}
+
+		function activate_ingredients() {
+			if ($('#aa').hasClass('active')) {
+				$('#aa').removeClass('active');
+			}
+			if ($('#ar').hasClass('active')) {
+				$('#ar').removeClass('active');
+			}
+			if (!$('#ai').hasClass('active')) {
+				$('#ai').addClass('active');
+			}
+			let el = document.getElementById('content'), html = '';
+			
+			html += '<div class="search">';
+			html += '<input id="q_ingredient">';
+			html += '<button onclick="get_ingredient_tags()">Submit</button></div>';
+			html += '<div id="res"></div>';
+			
+			el.innerHTML = html;
+		}
+
+		function get_ingredient_tags() {
+			let query_string = document.getElementById('q_ingredient').value;
+
+			$.ajax({
+				method: 'GET',
+				url: '/get_ingredient_tags',
+				data: {
+					'query_string': query_string
+				},
+				success: data => {
+					tags = data['tags'];
+					put_tags();
+				}
+			});
+		}
+
+		function put_tags() {
+			let el = document.getElementById('res'), html = '';
+			for (let tag of tags) {
+				html += `<div onclick='query_tag("${tag}")'>${tag}</div>`;
+			}
+			el.innerHTML = html;
+		}
+
+		function query_tag(tag) {
+			$.ajax({
+				method: 'GET',
+				url: '/get_ingredients',
+				data: {
+					'query_tag': tag
+				},
+				success: data => {
+					ingredients = data['ingredients'];
+					put_ingredients();
+				}
+			});
+		}
+
+		function put_ingredients() {
+			let el = document.getElementById('res'), html = '';
+			for (let ingredient of ingredients) {
+				html += `${ingredient[1]}|${ingredient[9]}<br>`;
+			}
+			el.innerHTML = html;
+		}
+		
+		function logout() {
+			$.get('/logout', () => {location.replace('/')});
 		}
 	</script>
 </html>                                		                            

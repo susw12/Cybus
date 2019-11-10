@@ -1,45 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Tablezzzzz</title>
-		<link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type="text/css" />
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	</head>
-	<body>
-		Enter your username: <br>
-		<input id="uname"> <br>
-		Enter your password: <br>
-		<input id="pword"> <br>
-	</body>
-	<script> 		
-		arg_list = ['uname', 'pword'];
-		const enter_key = 13;
-		
-		$(() => {
-			document.onkeydown = function(event) {
-				if (event.which == enter_key) {
-					json = {};
-					for (let arg of arg_list) {
-						json[arg] = document.getElementById(arg).value;
-					}
-					console.log(json);
-					$.ajax({
-						method: 'POST',
-						url: '/login_student',
-						data: json,
-						success: data => {
-							if (data === 'ok') {
-								window.location.href = '/student_hub';
-							} else {
-								console.log(data);
-							}
-						}
-					});
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Student Login</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-dark">
+
+  <div class="container">
+    <div class="card card-login mx-auto mt-5">
+      <div class="card-header"><h3>Student Login</h3></div>
+      <div class="card-body">
+        <!-- <form> -->
+			<style>
+				.error {
+					background-color: #ff7f7f !important;
+					color: #7f0000 !important;
+					border: 1px solid;
+					text-align: center;
+					border-color: #7f0000 !important;
+				}
+			</style>
+			<div class="form-group">
+				<div class="form-label-group" id="formres">
+				</div>
+			</div>
+          <div class="form-group">
+            <div class="form-label-group">
+              <input type="email" id="uname" class="form-control" placeholder="Email address" required="required" autofocus="autofocus">
+              <label for="uname">Email address</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-label-group">
+              <input type="password" id="pword" class="form-control" placeholder="Password" required="required">
+              <label for="pword">Password</label>
+            </div>
+          </div>
+          <br>
+          <a class="btn btn-primary btn-block" href="#" onclick="login()">Login</a>
+        <!-- </form> -->
+        <div class="text-center">
+          <a class="d-block small mt-3" href="/register_student">Register an Account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <script> 		
+      arg_list = ['uname', 'pword'];
+      const enter_key = 13;
+      
+      $(() => {
+        document.onkeydown = function(event) {
+          if (event.which == enter_key) {
+            login();
+		  }
+        }
+      });
+
+	  function login() {
+		json = {};
+		for (let arg of arg_list) {
+			json[arg] = document.getElementById(arg).value;
+		}
+		console.log(json);
+		$.ajax({
+			method: 'POST',
+			url: '/login_student',
+			data: json,
+			success: data => {
+				if (data === 'ok') {
+					window.location.href = '/student_hub';
+				} else {
+					$('#formres').addClass('error');
+					document.getElementById('formres').innerText = "Error: account does not exist.";
 				}
 			}
 		});
-	</script>
-</html>                                		                            
+	  }
+    </script>
+
+</body>
+
+</html>

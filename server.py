@@ -11,7 +11,7 @@ ID_LEN = 100
 
 app = Flask(__name__,
             static_url_path='', 
-            static_folder='./public',
+            static_folder='./public/static',
             template_folder='./public')
 			
 ### Add product page - done
@@ -326,6 +326,21 @@ def get_health_tags():
 def query_health_tags():
 	return ['gluten', 'non']
 
+@app.route('/get_ingredient_tags', methods=['GET'])
+def get_ingredient_tags():
+	qstring = request.args.get('query_string')
+	tags = db.get_tags(qstring)
+	return jsonify({'tags': tags})
+
+@app.route('/get_ingredients', methods=['GET'])
+def get_ingredients():
+	id = request.cookies.get('id')
+	qtag = request.args.get('query_tag')
+	ingredients = db.get_products(qtag, id)
+	for i in range(len(ingredients)):
+		ingredients[i].append(db.get_company(ingredients[i][5])[1])
+	return jsonify({'ingredients': ingredients})
+
 ### Invalid pages
 
 @app.route('/invalid_student')
@@ -336,7 +351,20 @@ def invalid_student():
 def invalid_company():
 	return 'Invalid request, you are not a company'
 	
+### Home
+
+@app.route('/logout')
+def logout():
+	res = make_response(redirect('/'))
+	res.delete_cookie('id')
+	res.delete_cookie('type')
+	return res
+
+@app.route('/')
+def root():
+	return render_template('home.html')
+
 ### Run
 		
 if __name__ == "__main__":
-	app.run(host = '0.0.0.0', port = 80)
+	app.run(host = 'localhost', port = 80)

@@ -39,7 +39,6 @@ def setup():
     #gname - group name
     c.execute('''create table if not exists master_groups (gid, gname)''')
     conn.commit()
-    
 
 def genID(l=[]):
     while True:
