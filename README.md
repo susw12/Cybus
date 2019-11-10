@@ -1,7 +1,7 @@
 <h1 align="center">
  <img src="https://github.com/susw12/teenhacksli/blob/master/Logo.png" width="300">
  <br>
- Cybus
+ Cibus
  <br>
 </h1>
 
@@ -33,7 +33,7 @@ Our biggest accomplishment was being able to have a working product early on. Th
 ## What we learned
 We learned that adequate planning makes a huge difference and when the plan falls apart as it did with frontend, we fall apart as we struggle to be able to work efficiently and stick to our schedule. We also learned that we should not bite off more than we can chew, even if we think we can do it.
 
-## What's next for Cybus
-Our plan for Cybus is to move the website over to a more stable and production-friendly platform like Django or Node.js and to add security features to our data storage. We would also like to improve the UI to make it more user-friendly.
+## What's next for Cibus
+Our plan for Cibus is to move the website over to a more stable and production-friendly platform like Django or Node.js and to add security features to our data storage. We would also like to improve the UI to make it more user-friendly.
 
 We are looking at possible ways to monetize our product and are interested in working with an investor to grow our product. We believe that this is a real issue that many college students face daily and there is a real market out there for this product.
