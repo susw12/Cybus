@@ -1,5 +1,5 @@
 <h1 align="center">
- <img src="https://raw.githack.com/susw12/teenhacksli/master/Logo.png" width="200">
+ <img src="https://github.com/susw12/teenhacksli/blob/master/Logo.png" width="200">
  <br>
  Cibus
  <br>
