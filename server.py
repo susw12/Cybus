@@ -322,8 +322,6 @@ def list_recipes():
 	
 	recipes = db.get_recipes(query_string, health_tags)
 
-	# print(recipes)
-
 	return jsonify({'recipes': recipes})
 
 @app.route('/get_health_tags', methods=['GET'])
@@ -347,7 +345,6 @@ def get_ingredients():
 	ingredients = db.get_products(qtag, id)
 	for i in range(len(ingredients)):
 		ingredients[i].append(db.get_company(ingredients[i][5])[1])
-	print(ingredients)
 	return jsonify({'ingredients': ingredients})
 
 ### Invalid pages

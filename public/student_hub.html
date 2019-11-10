@@ -347,7 +347,7 @@
 					<select>
 						<option>Allergies</option>
 					</select>
-					<div class="overSelect dropdown-menu"></div>
+					<div class="overSelect"></div>
 				</div>
 				<div class="checkboxes" id="checkboxes_0" style="display: none">
 					<label for="00">
@@ -379,7 +379,7 @@
 					<select>
 						<option>Diet</option>
 					</select>
-					<div class="overSelect dropdown-menu"></div>
+					<div class="overSelect"></div>
 				</div>
 				<div class="checkboxes" id="checkboxes_1" style="display: none">
 					<label for="01">
@@ -411,7 +411,7 @@
 					<select>
 						<option>Special diets</option>
 					</select>
-					<div class="overSelect dropdown-menu"></div>
+					<div class="overSelect"></div>
 				</div>
 				<div class="checkboxes" id="checkboxes_2" style="display: none">
 					<label for="02">
@@ -435,6 +435,7 @@
 		}
 		
 		function activate_recipes() {
+			init_checkboxes();
 			reselect('#ar');
 			let el = document.getElementById('content'), html = '';
 			
@@ -510,7 +511,8 @@
 			
 			for (let re of recipes) {
 				html += `<tr><td class="recipes">${re['source']}:</td>`;
-				html += `<td><a href = "${re['source_url']}">${re['name']}</a></td>`;
+				html += `<td><a href = "${re['source_url']}" title="Ingredients" data-toggle="popover" data-trigger="hover"
+				data-content="${unpack_array(re.ingredients)}" data-html="true">${re["name"]}</a></td>`;
 				html += '<tr>';
 			}
 			
@@ -519,6 +521,16 @@
 			if (recipes.length == 0) html += "No recipes found.";
 
 			el.innerHTML = html;
+			$('[data-toggle="popover"]').popover();
+		}
+
+		function unpack_array(array) {
+			str = '';
+			for (let i = 0; i < array.length - 1; i++) {
+				str += array[i] + '<br>';
+			}
+			str += array[array.length - 1];
+			return str;
 		}
 
 		function activate_ingredients() {
